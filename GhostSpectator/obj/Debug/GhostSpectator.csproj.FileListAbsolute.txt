@@ -13,7 +13,12 @@ D:\jeppe\Documents\Visual Studio Projects\GhostSpectator-EXILED\GhostSpectator\b
 D:\jeppe\Documents\Visual Studio Projects\GhostSpectator-EXILED\GhostSpectator\bin\Debug\UnityEngine.dll
 D:\jeppe\Documents\Visual Studio Projects\GhostSpectator-EXILED\GhostSpectator\bin\Debug\YamlDotNet.dll
 D:\jeppe\Documents\Visual Studio Projects\GhostSpectator-EXILED\GhostSpectator\bin\Debug\Logger.pdb
-D:\jeppe\Documents\Visual Studio Projects\GhostSpectator-EXILED\GhostSpectator\obj\Debug\GhostSpectator.csprojAssemblyReference.cache
 D:\jeppe\Documents\Visual Studio Projects\GhostSpectator-EXILED\GhostSpectator\obj\Debug\GhostSpectator.csproj.CopyComplete
 D:\jeppe\Documents\Visual Studio Projects\GhostSpectator-EXILED\GhostSpectator\obj\Debug\GhostSpectator.dll
 D:\jeppe\Documents\Visual Studio Projects\GhostSpectator-EXILED\GhostSpectator\obj\Debug\GhostSpectator.pdb
+D:\jeppe\Documents\Visual Studio Projects\GhostSpectator-EXILED\GhostSpectator\obj\Debug\GhostSpectator.csprojAssemblyReference.cache
+D:\jeppe\Documents\Visual Studio Projects\GhostSpectator-EXILED\GhostSpectator\bin\Debug\da\GhostSpectator.resources.dll
+D:\jeppe\Documents\Visual Studio Projects\GhostSpectator-EXILED\GhostSpectator\obj\Debug\GhostSpectator.Translation.strings.resources
+D:\jeppe\Documents\Visual Studio Projects\GhostSpectator-EXILED\GhostSpectator\obj\Debug\GhostSpectator.Translation.strings.da.resources
+D:\jeppe\Documents\Visual Studio Projects\GhostSpectator-EXILED\GhostSpectator\obj\Debug\GhostSpectator.csproj.GenerateResource.cache
+D:\jeppe\Documents\Visual Studio Projects\GhostSpectator-EXILED\GhostSpectator\obj\Debug\da\GhostSpectator.resources.dll

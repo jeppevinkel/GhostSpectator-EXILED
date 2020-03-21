@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using EXILED;
 using Harmony;
 using Logger;
 using MEC;
+using GhostSpectator.Patches;
 
 namespace GhostSpectator
 {
@@ -20,14 +22,15 @@ namespace GhostSpectator
         public bool AllowDamage;
         public bool AllowPickup;
         public bool DebugMode;
+        public string Lang;
         public static bool GhostInteract;
         public static string GhostMessage;
         public static bool GhostGod;
         public static bool GhostRagdoll;
         public static bool GhostNoclip;
 
-        private HarmonyInstance instance;
-        private static int patchFixer;
+        private HarmonyInstance _instance;
+        private static int _patchFixer;
 
         public override void OnEnable()
         {
@@ -38,8 +41,9 @@ namespace GhostSpectator
                 {
                     return;
                 }
+                CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(Lang);
 
-                Log = new Logger.Logger("GhostSpectator", DebugMode);
+                Log = new Logger.Logger("GhostSpectator", DebugMode || Config.GetBool("exiled_debug"));
 
                 Log.Debug("Initializing event handlers..");
                 EventHandlers = new EventHandlers(this);
@@ -52,14 +56,15 @@ namespace GhostSpectator
                 Events.TeamRespawnEvent += EventHandlers.OnTeamRespawn;
                 Events.PlayerDeathEvent += EventHandlers.OnPlayerDeath;
                 Events.PlayerSpawnEvent += EventHandlers.OnPlayerSpawn;
+                Events.ItemChangedEvent += EventHandlers.OnItemChanged;
 
                 Log.Debug("Patching...");
                 try
                 {
                     //You must use an incrementer for the harmony instance name, otherwise the new instance will fail to be created if the plugin is reloaded.
-                    patchFixer++;
-                    instance = HarmonyInstance.Create($"ghostspectator.patches{patchFixer}");
-                    instance.PatchAll();
+                    _patchFixer++;
+                    _instance = HarmonyInstance.Create($"ghostspectator.patches{_patchFixer}");
+                    _instance.PatchAll();
                 }
                 catch (Exception exception)
                 {
@@ -86,11 +91,12 @@ namespace GhostSpectator
             Events.TeamRespawnEvent -= EventHandlers.OnTeamRespawn;
             Events.PlayerDeathEvent -= EventHandlers.OnPlayerDeath;
             Events.PlayerSpawnEvent -= EventHandlers.OnPlayerSpawn;
+            Events.ItemChangedEvent -= EventHandlers.OnItemChanged;
 
             EventHandlers = null;
 
             Log.Debug("Unpatching...");
-            instance.UnpatchAll();
+            _instance.UnpatchAll();
             Log.Debug("Unpatching complete. Goodbye.");
         }
 
@@ -108,6 +114,8 @@ namespace GhostSpectator
                 "You have been spawned as a spectator ghost.\n" +
                 "Drop your <color=#ff0000>7.62</color> to be <color=#ff0000>teleported</color> to the <color=#ff0000>next</color> player\n" +
                 "Drop your <color=#ff0000>5.56</color> to be <color=#ff0000>teleported</color> to the <color=#ff0000>previous</color> player");
+            Lang = Config.GetString("gs_language",
+                "en-US");
         }
 
         public override void OnReload()
