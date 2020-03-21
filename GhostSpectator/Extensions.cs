@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using EXILED;
 using EXILED.Extensions;
+using GhostSpectator.Localization;
+using MEC;
+using RemoteAdmin;
 
 namespace GhostSpectator
 {
@@ -19,14 +22,17 @@ namespace GhostSpectator
             switch (enabled)
             {
                 case true:
-                    //rh.GetComponent<Scp173PlayerScript>()._flash.blinded = true;
+                    rh.GetComponent<Scp173PlayerScript>()._flash.blinded = true;
                     if (Plugin.GhostGod) rh.SetGodMode(true);
 
                     if (Plugin.GhostNoclip)
                     {
-                        rh.characterClassManager.SetNoclip(true);
-                        rh.characterClassManager.CmdSetNoclip(true);
-                        rh.characterClassManager.NetworkNoclipEnabled = true;
+                        GameCore.Console.singleton.TypeCommand($"/NOCLIP {rh.GetPlayerId()}. ENABLE");
+                    }
+
+                    if (!EventPlugin.DeadPlayers.Contains(rh.gameObject))
+                    {
+                        EventPlugin.DeadPlayers.Add(rh.gameObject);
                     }
 
                     EventPlugin.TargetGhost.Clear();
@@ -37,14 +43,17 @@ namespace GhostSpectator
                     //EventPlugin.GhostedIds.Add(rh.GetPlayerId());
                     break;
                 default:
-                    //rh.GetComponent<Scp173PlayerScript>()._flash.blinded = false;
+                    rh.GetComponent<Scp173PlayerScript>()._flash.blinded = false;
                     if (Plugin.GhostGod) rh.SetGodMode(false);
+
                     if (Plugin.GhostNoclip)
                     {
-                        rh.characterClassManager.SetNoclip(false);
-                        rh.characterClassManager.CmdSetNoclip(false);
-                        rh.characterClassManager.NetworkNoclipEnabled = false;
-                        rh.characterClassManager.CallCmdSetNoclip(false);
+                        GameCore.Console.singleton.TypeCommand($"/NOCLIP {rh.GetPlayerId()}. DISABLE");
+                    }
+
+                    if (EventPlugin.DeadPlayers.Contains(rh.gameObject))
+                    {
+                        EventPlugin.DeadPlayers.Remove(rh.gameObject);
                     }
 
                     EventPlugin.TargetGhost.Clear();
@@ -59,7 +68,7 @@ namespace GhostSpectator
 
         public static bool UseGhostItem(this ReferenceHub rh, ItemType item)
         {
-            if (!Plugin.GhostList.Contains(rh) || (item != ItemType.Ammo762 && item != ItemType.Ammo556)) return true;
+            if (!Plugin.GhostList.Contains(rh) || (item != ItemType.Ammo762 && item != ItemType.Ammo556 && item != ItemType.Ammo9mm)) return true;
             Plugin.Log.Debug($"{rh.GetNickname()} attempting ghost spectator teleport.");
             List<ReferenceHub> players = Player.GetHubs().Where(p => !Plugin.GhostList.Contains(p) && p.GetRole() != RoleType.None &&
                                                                      p.GetRole() != RoleType.Spectator && p.GetRole() != RoleType.Tutorial).ToList();
@@ -68,7 +77,7 @@ namespace GhostSpectator
             {
 
                 rh.ClearBroadcasts();
-                rh.Broadcast(3, Translation.strings.teleportNone);
+                rh.Broadcast(3, Translation.GetText().teleportNone);
                 return false;
             }
 
@@ -86,7 +95,7 @@ namespace GhostSpectator
                                 Plugin.Log.Debug($"Teleporting {rh.GetNickname()} to {player.GetNickname()}.");
 
                                 rh.ClearBroadcasts();
-                                rh.Broadcast(3, string.Format(Translation.strings.teleportTo, player.GetNickname()));
+                                rh.Broadcast(3, string.Format(Translation.GetText().teleportTo, player.GetNickname()));
 
                                 return false;
                             }
@@ -95,33 +104,40 @@ namespace GhostSpectator
                         Plugin.Log.Debug($"Teleporting {rh.GetNickname()} to {players[0].GetNickname()}.");
 
                         rh.ClearBroadcasts();
-                        rh.Broadcast(3, string.Format(Translation.strings.teleportTo, players[0].GetNickname()));
+                        rh.Broadcast(3, string.Format(Translation.GetText().teleportTo, players[0].GetNickname()));
 
                         break;
                     }
                 case ItemType.Ammo556:
+                {
+                    foreach (var player in players.OrderByDescending(p => p.GetPlayerId()))
                     {
-                        foreach (var player in players.OrderByDescending(p => p.GetPlayerId()))
+                        if (player.GetPlayerId() < Plugin.GhostPos[rh.GetUserId()])
                         {
-                            if (player.GetPlayerId() < Plugin.GhostPos[rh.GetUserId()])
-                            {
-                                rh.SetPosition(player.GetPosition());
-                                Plugin.Log.Debug($"Teleporting {rh.GetNickname()} to {player.GetNickname()}.");
+                            rh.SetPosition(player.GetPosition());
+                            Plugin.Log.Debug($"Teleporting {rh.GetNickname()} to {player.GetNickname()}.");
 
-                                rh.ClearBroadcasts();
-                                rh.Broadcast(3, string.Format(Translation.strings.teleportTo, player.GetNickname()));
+                            rh.ClearBroadcasts();
+                            rh.Broadcast(3, string.Format(Translation.GetText().teleportTo, player.GetNickname()));
 
-                                return false;
-                            }
+                            return false;
                         }
-                        rh.SetPosition(players[players.Count - 1].GetPosition());
-                        Plugin.Log.Debug($"Teleporting {rh.GetNickname()} to {players[players.Count - 1].GetNickname()}.");
-
-                        rh.ClearBroadcasts();
-                        rh.Broadcast(3, string.Format(Translation.strings.teleportTo, players[0].GetNickname()));
-
-                        break;
                     }
+                    rh.SetPosition(players[players.Count - 1].GetPosition());
+                    Plugin.Log.Debug($"Teleporting {rh.GetNickname()} to {players[players.Count - 1].GetNickname()}.");
+
+                    rh.ClearBroadcasts();
+                    rh.Broadcast(3, string.Format(Translation.GetText().teleportTo, players[0].GetNickname()));
+
+                    break;
+                }
+                case ItemType.Ammo9mm:
+                {
+                    rh.ClearBroadcasts();
+                    rh.Broadcast(3, Translation.GetText().notImplementedYet);
+
+                    break;
+                }
             }
 
             return false;
@@ -131,6 +147,12 @@ namespace GhostSpectator
         {
             rh.SetRole(Plugin.GhostRole);
             rh.SetGhostMode(true);
+            Timing.RunCoroutine(RefreshDeadPlayers());
+        }
+
+        public static IEnumerator<float> RefreshDeadPlayers()
+        {
+            yield return Timing.WaitForSeconds(0.5f);
         }
 
         public static void PlayGhostMessage(this ReferenceHub rh)

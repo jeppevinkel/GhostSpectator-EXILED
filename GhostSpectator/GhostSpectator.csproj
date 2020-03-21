@@ -60,6 +60,9 @@
     <Reference Include="Mirror">
       <HintPath>..\..\EXILED-References\Mirror.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -75,39 +78,28 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandHandler.cs" />
     <Compile Include="EventHandlers.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Patches\Change914KnobPatch.cs" />
     <Compile Include="Patches\Contain106Patch.cs" />
+    <Compile Include="Patches\DetonateWarheadPatch.cs" />
     <Compile Include="Patches\Generator079InteractPatch.cs" />
     <Compile Include="Patches\SetTransmitPatch.cs" />
+    <Compile Include="Patches\SwitchAWButtonPatch.cs" />
     <Compile Include="Patches\Use914Patch.cs" />
     <Compile Include="Patches\UseLockerPatch.cs" />
     <Compile Include="Patches\OpenDoorPatch.cs" />
     <Compile Include="Patches\UseElevatorPatch.cs" />
+    <Compile Include="Patches\UsePanelPatch.cs" />
+    <Compile Include="Patches\UseWorkStationTakePatch.cs" />
+    <Compile Include="Patches\UseWorkStationPlacePatch.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Translation\strings.da.Designer.cs">
-      <DependentUpon>strings.da.resx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Translation\strings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>strings.resx</DependentUpon>
-    </Compile>
+    <Compile Include="Translation\Translation.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <EmbeddedResource Include="Translation\strings.da.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>strings.da.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Translation\strings.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>strings.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

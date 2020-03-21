@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EXILED.Extensions;
+using GhostSpectator.Localization;
 using Harmony;
 
 namespace GhostSpectator.Patches
@@ -20,7 +21,7 @@ namespace GhostSpectator.Patches
             ReferenceHub rh = __instance.GetComponent<ReferenceHub>();
 
             rh.ClearBroadcasts();
-            rh.Broadcast(3, Translation.strings.containDenied);
+            rh.Broadcast(3, Translation.GetText().containDenied);
 
             return false;
         }

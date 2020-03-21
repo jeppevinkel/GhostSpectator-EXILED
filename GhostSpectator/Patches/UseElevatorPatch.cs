@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EXILED.Extensions;
+using GhostSpectator.Localization;
 using Harmony;
 using UnityEngine;
 
@@ -37,10 +38,10 @@ namespace GhostSpectator.Patches
                 }
             }
 
-            if (furthestObject != null) rh.SetPosition(furthestObject.position + furthestObject.right * 5);
+            if (furthestObject != null) rh.SetPosition(furthestObject.position + furthestObject.right * 4.5f);
 
             rh.ClearBroadcasts();
-            rh.Broadcast(3, Translation.strings.elevatorTeleport);
+            rh.Broadcast(3, Translation.GetText().elevatorTeleport);
 
             return false;
         }

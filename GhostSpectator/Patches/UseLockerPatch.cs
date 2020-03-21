@@ -7,6 +7,7 @@ using EXILED.Extensions;
 using Harmony;
 using UnityEngine;
 using System.Globalization;
+using GhostSpectator.Localization;
 
 namespace GhostSpectator.Patches
 {
@@ -27,7 +28,7 @@ namespace GhostSpectator.Patches
             ReferenceHub rh = __instance.GetComponent<ReferenceHub>();
 
             rh.ClearBroadcasts();
-            rh.Broadcast(3, Translation.strings.lockerDenied);
+            rh.Broadcast(3, Translation.GetText().lockerDenied);
 
             return false;
         }

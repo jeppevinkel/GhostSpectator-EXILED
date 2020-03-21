@@ -1,17 +1,23 @@
 using System;
+using System.Threading;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
+using System.Reflection;
+using System.Resources;
 using EXILED;
 using Harmony;
 using Logger;
 using MEC;
 using GhostSpectator.Patches;
+using GhostSpectator.Localization;
 
 namespace GhostSpectator
 {
     public class Plugin : EXILED.Plugin
     {
         public EventHandlers EventHandlers;
+        public CommandHandler CommandHandler;
 
         public static Logger.Logger Log;
         public static List<ReferenceHub> GhostList = new List<ReferenceHub>();
@@ -41,12 +47,33 @@ namespace GhostSpectator
                 {
                     return;
                 }
-                CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(Lang);
-
                 Log = new Logger.Logger("GhostSpectator", DebugMode || Config.GetBool("exiled_debug"));
+
+                Log.Info($"Attempting to set language to {Lang}.");
+
+                Translation.LoadTranslations();
+
+                CultureInfo ci;
+                try
+                {
+                    ci = CultureInfo.GetCultureInfo(Lang);
+                }
+                catch (Exception e)
+                {
+                    ci = CultureInfo.GetCultureInfo("en");
+                    Log.Error($"{Lang} is not a valid language. Defaulting to English.");
+                    Log.Error($"{e.Message}");
+                }
+                
+                CultureInfo.DefaultThreadCurrentCulture = ci;
+                CultureInfo.DefaultThreadCurrentUICulture = ci;
+                Log.Info($"Language set to {ci.DisplayName}.");
+                Log.Debug($"Language test {Translation.GetString("workstationTakeDenied")}.");
+                Log.Debug($"Language test {Translation.GetText().doorDenied}.");
 
                 Log.Debug("Initializing event handlers..");
                 EventHandlers = new EventHandlers(this);
+                CommandHandler = new CommandHandler(this);
 
                 Events.WaitingForPlayersEvent += EventHandlers.OnWaitingForPlayers;
                 Events.RoundEndEvent += EventHandlers.OnRoundEnd;
@@ -57,6 +84,8 @@ namespace GhostSpectator
                 Events.PlayerDeathEvent += EventHandlers.OnPlayerDeath;
                 Events.PlayerSpawnEvent += EventHandlers.OnPlayerSpawn;
                 Events.ItemChangedEvent += EventHandlers.OnItemChanged;
+
+                Events.RemoteAdminCommandEvent += CommandHandler.OnRACommand;
 
                 Log.Debug("Patching...");
                 try
@@ -93,6 +122,8 @@ namespace GhostSpectator
             Events.PlayerSpawnEvent -= EventHandlers.OnPlayerSpawn;
             Events.ItemChangedEvent -= EventHandlers.OnItemChanged;
 
+            Events.RemoteAdminCommandEvent -= CommandHandler.OnRACommand;
+
             EventHandlers = null;
 
             Log.Debug("Unpatching...");
@@ -123,6 +154,7 @@ namespace GhostSpectator
             //This is only fired when you use the EXILED reload command, the reload command will call OnDisable, OnReload, reload the plugin, then OnEnable in that order. There is no GAC bypass, so if you are updating a plugin, it must have a unique assembly name, and you need to remove the old version from the plugins folder
         }
 
-        public override string getName { get; } = "GhostSpectator";
+        public static string GetName { get; } = "GhostSpectator";
+        public override string getName { get; } = GetName;
     }
 }
