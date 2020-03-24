@@ -85,6 +85,7 @@
     <Compile Include="Patches\Contain106Patch.cs" />
     <Compile Include="Patches\DetonateWarheadPatch.cs" />
     <Compile Include="Patches\Generator079InteractPatch.cs" />
+    <Compile Include="Patches\MTFRespawnUpdatePatch.cs" />
     <Compile Include="Patches\SetTransmitPatch.cs" />
     <Compile Include="Patches\SwitchAWButtonPatch.cs" />
     <Compile Include="Patches\Use914Patch.cs" />

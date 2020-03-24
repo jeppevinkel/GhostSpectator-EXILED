@@ -5,6 +5,8 @@ using Grenades;
 using MEC;
 using EXILED.Extensions;
 using System;
+using Mirror;
+using UnityEngine;
 
 namespace GhostSpectator
 {
@@ -32,7 +34,7 @@ namespace GhostSpectator
 
         public void OnTeamRespawn(ref TeamRespawnEvent ev)
         {
-            if (Plugin.GhostList.Count <= 0) return;
+            //if (Plugin.GhostList.Count <= 0) return;
             Plugin.Log.Debug($"Ghost spectators added to respawn list.");
             ev.ToRespawn.AddRange(Plugin.GhostList);
         }
@@ -66,7 +68,7 @@ namespace GhostSpectator
 
         public void OnItemChanged(ItemChangedEvent ev)
         {
-            if (ev.Player.UseGhostItem(ev.NewItem.id))
+            if (!ev.Player.UseGhostItem(ev.NewItem.id))
             {
                 ev.Player.inventory.curItem = ItemType.Coin;
             }

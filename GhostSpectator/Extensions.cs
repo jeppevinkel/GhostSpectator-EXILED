@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using EXILED;
 using EXILED.Extensions;
 using GhostSpectator.Localization;
 using MEC;
+using Mirror;
 using RemoteAdmin;
+using UnityEngine;
 
 namespace GhostSpectator
 {
@@ -30,10 +33,10 @@ namespace GhostSpectator
                         GameCore.Console.singleton.TypeCommand($"/NOCLIP {rh.GetPlayerId()}. ENABLE");
                     }
 
-                    if (!EventPlugin.DeadPlayers.Contains(rh.gameObject))
-                    {
-                        EventPlugin.DeadPlayers.Add(rh.gameObject);
-                    }
+                    //if (!EventPlugin.DeadPlayers.Contains(rh.gameObject))
+                    //{
+                    //    EventPlugin.DeadPlayers.Add(rh.gameObject);
+                    //}
 
                     EventPlugin.TargetGhost.Clear();
                     foreach (var player in Player.GetHubs().Where(hub => !Plugin.GhostList.Contains(hub)))
@@ -51,10 +54,10 @@ namespace GhostSpectator
                         GameCore.Console.singleton.TypeCommand($"/NOCLIP {rh.GetPlayerId()}. DISABLE");
                     }
 
-                    if (EventPlugin.DeadPlayers.Contains(rh.gameObject))
-                    {
-                        EventPlugin.DeadPlayers.Remove(rh.gameObject);
-                    }
+                    //if (EventPlugin.DeadPlayers.Contains(rh.gameObject))
+                    //{
+                    //    EventPlugin.DeadPlayers.Remove(rh.gameObject);
+                    //}
 
                     EventPlugin.TargetGhost.Clear();
                     foreach (var player in Player.GetHubs().Where(hub => !Plugin.GhostList.Contains(hub)))
@@ -92,6 +95,7 @@ namespace GhostSpectator
                             if (player.GetPlayerId() > Plugin.GhostPos[rh.GetUserId()])
                             {
                                 rh.SetPosition(player.GetPosition());
+                                Plugin.GhostPos[rh.GetUserId()] = player.GetPlayerId();
                                 Plugin.Log.Debug($"Teleporting {rh.GetNickname()} to {player.GetNickname()}.");
 
                                 rh.ClearBroadcasts();
@@ -101,6 +105,7 @@ namespace GhostSpectator
                             }
                         }
                         rh.SetPosition(players[0].GetPosition());
+                        Plugin.GhostPos[rh.GetUserId()] = players[0].GetPlayerId();
                         Plugin.Log.Debug($"Teleporting {rh.GetNickname()} to {players[0].GetNickname()}.");
 
                         rh.ClearBroadcasts();
@@ -115,6 +120,7 @@ namespace GhostSpectator
                         if (player.GetPlayerId() < Plugin.GhostPos[rh.GetUserId()])
                         {
                             rh.SetPosition(player.GetPosition());
+                            Plugin.GhostPos[rh.GetUserId()] = player.GetPlayerId();
                             Plugin.Log.Debug($"Teleporting {rh.GetNickname()} to {player.GetNickname()}.");
 
                             rh.ClearBroadcasts();
@@ -124,10 +130,11 @@ namespace GhostSpectator
                         }
                     }
                     rh.SetPosition(players[players.Count - 1].GetPosition());
-                    Plugin.Log.Debug($"Teleporting {rh.GetNickname()} to {players[players.Count - 1].GetNickname()}.");
+                    Plugin.GhostPos[rh.GetUserId()] = players[players.Count - 1].GetPlayerId();
+                        Plugin.Log.Debug($"Teleporting {rh.GetNickname()} to {players[players.Count - 1].GetNickname()}.");
 
                     rh.ClearBroadcasts();
-                    rh.Broadcast(3, string.Format(Translation.GetText().teleportTo, players[0].GetNickname()));
+                    rh.Broadcast(3, string.Format(Translation.GetText().teleportTo, players[players.Count - 1].GetNickname()));
 
                     break;
                 }

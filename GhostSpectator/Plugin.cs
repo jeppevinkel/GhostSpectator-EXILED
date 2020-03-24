@@ -3,6 +3,7 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Resources;
 using EXILED;
@@ -11,6 +12,9 @@ using Logger;
 using MEC;
 using GhostSpectator.Patches;
 using GhostSpectator.Localization;
+using Mirror;
+using RemoteAdmin;
+using UnityEngine;
 
 namespace GhostSpectator
 {
@@ -68,7 +72,6 @@ namespace GhostSpectator
                 CultureInfo.DefaultThreadCurrentCulture = ci;
                 CultureInfo.DefaultThreadCurrentUICulture = ci;
                 Log.Info($"Language set to {ci.DisplayName}.");
-                Log.Debug($"Language test {Translation.GetString("workstationTakeDenied")}.");
                 Log.Debug($"Language test {Translation.GetText().doorDenied}.");
 
                 Log.Debug("Initializing event handlers..");
