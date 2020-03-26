@@ -81,6 +81,7 @@
     <Compile Include="CommandHandler.cs" />
     <Compile Include="EventHandlers.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="GhostSettings.cs" />
     <Compile Include="Patches\Change914KnobPatch.cs" />
     <Compile Include="Patches\Contain106Patch.cs" />
     <Compile Include="Patches\DetonateWarheadPatch.cs" />

@@ -5,6 +5,7 @@ using Grenades;
 using MEC;
 using EXILED.Extensions;
 using System;
+using GhostSpectator.Localization;
 using Mirror;
 using UnityEngine;
 
@@ -41,6 +42,8 @@ namespace GhostSpectator
 
         public void OnPlayerDeath(ref PlayerDeathEvent ev)
         {
+	        if (!Plugin.GhostSettings.ContainsKey(ev.Player.GetUserId()) || Plugin.GhostSettings[ev.Player.GetUserId()].specmode != GhostSettings.Specmode.Ghost) return;
+
             if (!Plugin.GhostList.Contains(ev.Player))
             {
                 Plugin.Log.Debug($"{ev.Player.GetNickname()} added to list of ghost spectators.");
@@ -79,6 +82,65 @@ namespace GhostSpectator
             ev.Allow = ev.Player.UseGhostItem(ev.Item.id);
         }
 
+        public void OnConsoleCommand(ConsoleCommandEvent ev)
+        {
+	        ev.ReturnMessage = ev.Command;
+
+	        if (ev.Command.ToLower() == "specmode")
+	        {
+		        if (!Plugin.GhostSettings.ContainsKey(ev.Player.GetUserId())) Plugin.GhostSettings.Add(ev.Player.GetUserId(), new GhostSettings());
+
+                switch (Plugin.GhostSettings[ev.Player.GetUserId()].specmode)
+                {
+                    case GhostSettings.Specmode.Normal:
+	                    Plugin.GhostSettings[ev.Player.GetUserId()].specmode = GhostSettings.Specmode.Ghost;
+	                    ev.ReturnMessage = Translation.GetText().specmodeGhost;
+	                    ev.Color = "blue";
+                        break;
+                    case GhostSettings.Specmode.Ghost:
+	                    Plugin.GhostSettings[ev.Player.GetUserId()].specmode = GhostSettings.Specmode.Normal;
+
+	                    if (Plugin.GhostList.Contains(ev.Player))
+	                    {
+		                    Plugin.Log.Debug($"{ev.Player.GetNickname()} removed from list of ghost spectators.");
+		                    Plugin.GhostList.Remove(ev.Player);
+		                    ev.Player.SetGhostMode(false);
+		                    ev.Player.ClearInventory();
+                            ev.Player.characterClassManager.SetClassID(RoleType.Spectator);
+                        }
+
+                        ev.ReturnMessage = Translation.GetText().specmodeNormal;
+	                    ev.Color = "blue";
+                        break;
+                    default:
+	                    Plugin.GhostSettings[ev.Player.GetUserId()].specmode = GhostSettings.Specmode.Normal;
+
+	                    if (Plugin.GhostList.Contains(ev.Player))
+	                    {
+		                    Plugin.Log.Debug($"{ev.Player.GetNickname()} removed from list of ghost spectators.");
+		                    Plugin.GhostList.Remove(ev.Player);
+		                    ev.Player.SetGhostMode(false);
+                            ev.Player.ClearInventory();
+		                    ev.Player.characterClassManager.SetClassID(RoleType.Spectator);
+                        }
+
+                        ev.ReturnMessage = Translation.GetText().specmodeNormal;
+	                    ev.Color = "blue";
+                        break;
+                }
+            }
+            else if (ev.Command.ToLower() == "specboard")
+	        {
+		        if (!Plugin.GhostSettings.ContainsKey(ev.Player.GetUserId())) Plugin.GhostSettings.Add(ev.Player.GetUserId(), new GhostSettings());
+
+                Plugin.GhostSettings[ev.Player.GetUserId()].specboard =
+			        !Plugin.GhostSettings[ev.Player.GetUserId()].specboard;
+
+                ev.ReturnMessage = "You have " + (Plugin.GhostSettings[ev.Player.GetUserId()].specboard ? "enabled" : "disabled") + " specboard mode.";
+                ev.Color = "Magenta";
+            }
+        }
+
         public IEnumerator<float> SlowUpdate()
         {
             while (true)
@@ -87,7 +149,7 @@ namespace GhostSpectator
 
                 foreach (var player in Player.GetHubs())
                 {
-                    if (player.GetRole() != RoleType.Spectator) continue;
+                    if (player.GetRole() != RoleType.Spectator || !Plugin.GhostSettings.ContainsKey(player.GetUserId()) || Plugin.GhostSettings[player.GetUserId()].specmode != GhostSettings.Specmode.Ghost) continue;
                     if (!Plugin.GhostList.Contains(player))
                     {
                         Plugin.Log.Debug($"{player.GetNickname()} added to list of ghost spectators.");
@@ -112,5 +174,5 @@ namespace GhostSpectator
             rh.AddItem(ItemType.Ammo556);
             rh.AddItem(ItemType.Ammo9mm);
         }
-	}
+    }
 }

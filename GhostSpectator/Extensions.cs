@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Remoting.Messaging;
 using EXILED;
 using EXILED.Extensions;
@@ -33,17 +35,22 @@ namespace GhostSpectator
                         GameCore.Console.singleton.TypeCommand($"/NOCLIP {rh.GetPlayerId()}. ENABLE");
                     }
 
-                    //if (!EventPlugin.DeadPlayers.Contains(rh.gameObject))
-                    //{
-                    //    EventPlugin.DeadPlayers.Add(rh.gameObject);
-                    //}
-
                     EventPlugin.TargetGhost.Clear();
                     foreach (var player in Player.GetHubs().Where(hub => !Plugin.GhostList.Contains(hub)))
                     {
                         EventPlugin.TargetGhost.Add(player, Plugin.GhostList.Select(hub => hub.GetPlayerId()).ToList());
                     }
-                    //EventPlugin.GhostedIds.Add(rh.GetPlayerId());
+
+                    if (!Plugin.GhostSettings.ContainsKey(rh.GetUserId())) Plugin.GhostSettings.Add(rh.GetUserId(), new GhostSettings());
+
+                    if (Plugin.GhostSettings[rh.GetUserId()].specboard)
+                    {
+	                    SetPlayerScale(rh.gameObject, 0.6f, 0.6f, 0.06f);
+                    }
+                    else
+                    {
+	                    SetPlayerScale(rh.gameObject, 0.6f, 0.6f, 0.6f);
+                    }
                     break;
                 default:
                     rh.GetComponent<Scp173PlayerScript>()._flash.blinded = false;
@@ -54,17 +61,13 @@ namespace GhostSpectator
                         GameCore.Console.singleton.TypeCommand($"/NOCLIP {rh.GetPlayerId()}. DISABLE");
                     }
 
-                    //if (EventPlugin.DeadPlayers.Contains(rh.gameObject))
-                    //{
-                    //    EventPlugin.DeadPlayers.Remove(rh.gameObject);
-                    //}
-
                     EventPlugin.TargetGhost.Clear();
                     foreach (var player in Player.GetHubs().Where(hub => !Plugin.GhostList.Contains(hub)))
                     {
                         EventPlugin.TargetGhost.Add(player, Plugin.GhostList.Select(hub => hub.GetPlayerId()).ToList());
                     }
-                    //EventPlugin.GhostedIds.Remove(rh.GetPlayerId());
+
+                    SetPlayerScale(rh.gameObject, 1f, 1f, 1f);
                     break;
             }
 		}
@@ -76,26 +79,26 @@ namespace GhostSpectator
             List<ReferenceHub> players = Player.GetHubs().Where(p => !Plugin.GhostList.Contains(p) && p.GetRole() != RoleType.None &&
                                                                      p.GetRole() != RoleType.Spectator && p.GetRole() != RoleType.Tutorial).ToList();
 
-            if (players.Count <= 0)
-            {
-
-                rh.ClearBroadcasts();
-                rh.Broadcast(3, Translation.GetText().teleportNone);
-                return false;
-            }
-
-            if (!Plugin.GhostPos.ContainsKey(rh.GetUserId())) Plugin.GhostPos.Add(rh.GetUserId(), 0);
-
             switch (item)
             {
                 case ItemType.Ammo762:
                     {
+	                    if (players.Count <= 0)
+	                    {
+
+		                    rh.ClearBroadcasts();
+		                    rh.Broadcast(3, Translation.GetText().teleportNone);
+		                    return false;
+	                    }
+
+                        if (!Plugin.GhostSettings.ContainsKey(rh.GetUserId())) Plugin.GhostSettings.Add(rh.GetUserId(), new GhostSettings());
+
                         foreach (var player in players.OrderBy(p => p.GetPlayerId()))
                         {
-                            if (player.GetPlayerId() > Plugin.GhostPos[rh.GetUserId()])
+                            if (player.GetPlayerId() > Plugin.GhostSettings[rh.GetUserId()].pos)
                             {
                                 rh.SetPosition(player.GetPosition());
-                                Plugin.GhostPos[rh.GetUserId()] = player.GetPlayerId();
+                                Plugin.GhostSettings[rh.GetUserId()].pos = player.GetPlayerId();
                                 Plugin.Log.Debug($"Teleporting {rh.GetNickname()} to {player.GetNickname()}.");
 
                                 rh.ClearBroadcasts();
@@ -105,7 +108,7 @@ namespace GhostSpectator
                             }
                         }
                         rh.SetPosition(players[0].GetPosition());
-                        Plugin.GhostPos[rh.GetUserId()] = players[0].GetPlayerId();
+                        Plugin.GhostSettings[rh.GetUserId()].pos = players[0].GetPlayerId();
                         Plugin.Log.Debug($"Teleporting {rh.GetNickname()} to {players[0].GetNickname()}.");
 
                         rh.ClearBroadcasts();
@@ -115,12 +118,22 @@ namespace GhostSpectator
                     }
                 case ItemType.Ammo556:
                 {
-                    foreach (var player in players.OrderByDescending(p => p.GetPlayerId()))
+	                if (players.Count <= 0)
+	                {
+
+		                rh.ClearBroadcasts();
+		                rh.Broadcast(3, Translation.GetText().teleportNone);
+		                return false;
+	                }
+
+	                if (!Plugin.GhostSettings.ContainsKey(rh.GetUserId())) Plugin.GhostSettings.Add(rh.GetUserId(), new GhostSettings());
+
+	                foreach (var player in players.OrderByDescending(p => p.GetPlayerId()))
                     {
-                        if (player.GetPlayerId() < Plugin.GhostPos[rh.GetUserId()])
+                        if (player.GetPlayerId() < Plugin.GhostSettings[rh.GetUserId()].pos)
                         {
                             rh.SetPosition(player.GetPosition());
-                            Plugin.GhostPos[rh.GetUserId()] = player.GetPlayerId();
+                            Plugin.GhostSettings[rh.GetUserId()].pos = player.GetPlayerId();
                             Plugin.Log.Debug($"Teleporting {rh.GetNickname()} to {player.GetNickname()}.");
 
                             rh.ClearBroadcasts();
@@ -130,7 +143,7 @@ namespace GhostSpectator
                         }
                     }
                     rh.SetPosition(players[players.Count - 1].GetPosition());
-                    Plugin.GhostPos[rh.GetUserId()] = players[players.Count - 1].GetPlayerId();
+                    Plugin.GhostSettings[rh.GetUserId()].pos = players[players.Count - 1].GetPlayerId();
                         Plugin.Log.Debug($"Teleporting {rh.GetNickname()} to {players[players.Count - 1].GetNickname()}.");
 
                     rh.ClearBroadcasts();
@@ -154,17 +167,82 @@ namespace GhostSpectator
         {
             rh.SetRole(Plugin.GhostRole);
             rh.SetGhostMode(true);
-            Timing.RunCoroutine(RefreshDeadPlayers());
-        }
-
-        public static IEnumerator<float> RefreshDeadPlayers()
-        {
-            yield return Timing.WaitForSeconds(0.5f);
         }
 
         public static void PlayGhostMessage(this ReferenceHub rh)
         {
             rh.Broadcast(12, Plugin.GhostMessage);
+        }
+
+
+        public static void SetPlayerScale(GameObject target, float x, float y, float z)
+        {
+	        try
+	        {
+		        NetworkIdentity identity = target.GetComponent<NetworkIdentity>();
+
+
+		        target.transform.localScale = new Vector3(1 * x, 1 * y, 1 * z);
+
+		        ObjectDestroyMessage destroyMessage = new ObjectDestroyMessage();
+		        destroyMessage.netId = identity.netId;
+
+
+		        foreach (GameObject player in PlayerManager.players)
+		        {
+			        NetworkConnection playerCon = player.GetComponent<NetworkIdentity>().connectionToClient;
+
+			        if (player != target)
+				        playerCon.Send(destroyMessage, 0);
+
+			        object[] parameters = new object[] { identity, playerCon };
+			        typeof(NetworkServer).InvokeStaticMethod("SendSpawnMessage", parameters);
+		        }
+	        }
+	        catch (Exception e)
+	        {
+		        Log.Info($"Set Scale error: {e}");
+	        }
+        }
+
+        public static void SetPlayerScale(GameObject target, float scale)
+        {
+	        try
+	        {
+		        NetworkIdentity identity = target.GetComponent<NetworkIdentity>();
+
+
+		        target.transform.localScale = Vector3.one * scale;
+
+		        ObjectDestroyMessage destroyMessage = new ObjectDestroyMessage();
+		        destroyMessage.netId = identity.netId;
+
+
+		        foreach (GameObject player in PlayerManager.players)
+		        {
+			        if (player == target)
+				        continue;
+
+			        NetworkConnection playerCon = player.GetComponent<NetworkIdentity>().connectionToClient;
+
+			        playerCon.Send(destroyMessage, 0);
+
+			        object[] parameters = new object[] { identity, playerCon };
+			        typeof(NetworkServer).InvokeStaticMethod("SendSpawnMessage", parameters);
+		        }
+	        }
+	        catch (Exception e)
+	        {
+		        Log.Info($"Set Scale error: {e}");
+	        }
+        }
+
+        public static void InvokeStaticMethod(this Type type, string methodName, object[] param)
+        {
+	        BindingFlags flags = BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.NonPublic |
+	                             BindingFlags.Static | BindingFlags.Public;
+	        MethodInfo info = type.GetMethod(methodName, flags);
+	        info?.Invoke(null, param);
         }
     }
 }

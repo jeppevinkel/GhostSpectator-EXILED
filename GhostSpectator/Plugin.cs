@@ -25,7 +25,7 @@ namespace GhostSpectator
 
         public static Logger.Logger Log;
         public static List<ReferenceHub> GhostList = new List<ReferenceHub>();
-        public static Dictionary<string, int> GhostPos = new Dictionary<string, int>();
+        public static readonly Dictionary<string, GhostSettings> GhostSettings = new Dictionary<string, GhostSettings>();
         public static RoleType GhostRole = RoleType.Tutorial;
 
         public bool Enabled;
@@ -89,6 +89,7 @@ namespace GhostSpectator
                 Events.ItemChangedEvent += EventHandlers.OnItemChanged;
 
                 Events.RemoteAdminCommandEvent += CommandHandler.OnRACommand;
+                Events.ConsoleCommandEvent += EventHandlers.OnConsoleCommand;
 
                 Log.Debug("Patching...");
                 try
@@ -126,6 +127,7 @@ namespace GhostSpectator
             Events.ItemChangedEvent -= EventHandlers.OnItemChanged;
 
             Events.RemoteAdminCommandEvent -= CommandHandler.OnRACommand;
+            Events.ConsoleCommandEvent -= EventHandlers.OnConsoleCommand;
 
             EventHandlers = null;
 

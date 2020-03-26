@@ -162,7 +162,9 @@ namespace GhostSpectator.Localization
                     warheadEnableDenied = "Tilskuere kan ikke aktivere sprænghovedet.",
                     warheadKeycardDenied = "Tilskuere kan ikke aktivere sprænghovedknappen.",
                     workstationPlaceDenied = "Tilskuere kan ikke bruge arbejdstationer.",
-                    workstationTakeDenied = "Tilskuere kan ikke bruge arbejdstationer."
+                    workstationTakeDenied = "Tilskuere kan ikke bruge arbejdstationer.",
+                    specmodeNormal = "Du har slået ghost mode fra.",
+                    specmodeGhost = "Du har slået ghost mode til."
                 }
             }
         };
@@ -187,6 +189,8 @@ namespace GhostSpectator.Localization
             public string warheadKeycardDenied = "Spectators can't activate the warhead button.";
             public string workstationPlaceDenied = "Spectators can't use workstations.";
             public string workstationTakeDenied = "Spectators can't use workstations.";
+            public string specmodeNormal = "You have toggled normal spectating mode.";
+            public string specmodeGhost = "You have toggled ghost spectating mode.";
         }
     }
 }
