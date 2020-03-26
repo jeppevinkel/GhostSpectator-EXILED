@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandHandler.cs" />
+    <Compile Include="CustomSpawnManager.cs" />
     <Compile Include="EventHandlers.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="GhostSettings.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Patches\Generator079InteractPatch.cs" />
     <Compile Include="Patches\MTFRespawnUpdatePatch.cs" />
     <Compile Include="Patches\PlayerEffectPatch.cs" />
+    <Compile Include="Patches\PlayerSpawnEventPatch.cs" />
     <Compile Include="Patches\SetTransmitPatch.cs" />
     <Compile Include="Patches\SwitchAWButtonPatch.cs" />
     <Compile Include="Patches\Use914Patch.cs" />

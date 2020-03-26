@@ -26,6 +26,7 @@ namespace GhostSpectator
         public static Logger.Logger Log;
         public static List<ReferenceHub> GhostList = new List<ReferenceHub>();
         public static readonly Dictionary<string, GhostSettings> GhostSettings = new Dictionary<string, GhostSettings>();
+        public static readonly List<ReferenceHub> GhostsBeingSpawned = new List<ReferenceHub>();
         public static RoleType GhostRole = RoleType.Tutorial;
 
         public bool Enabled;

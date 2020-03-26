@@ -166,9 +166,15 @@ namespace GhostSpectator
 
         public static void SpawnGhost(this ReferenceHub rh)
         {
-            rh.SetRole(Plugin.GhostRole);
+            if (!Plugin.GhostsBeingSpawned.Contains(rh))
+            {
+                Plugin.GhostsBeingSpawned.Add(rh);
+            }
+            //rh.SetRole(Plugin.GhostRole);
+            Vector3 spawnPos = GameObject.Find("TUT Spawn").transform.position;
+            if (spawnPos == null) spawnPos = new Vector3(0, 0, 0);
+            rh.SetClassCustomSpawn(Plugin.GhostRole, spawnPos);
             rh.SetGhostMode(true);
-            //Timing.CallDelayed(1, rh.SetSpectatorVoice);
         }
 
         public static void SetSpectatorVoice(this ReferenceHub rh)

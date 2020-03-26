@@ -43,7 +43,6 @@ namespace GhostSpectator
 
         public void OnTeamRespawn(ref TeamRespawnEvent ev)
         {
-            //if (Plugin.GhostList.Count <= 0) return;
             Plugin.Log.Debug($"Ghost spectators added to respawn list.");
             ev.ToRespawn.AddRange(Plugin.GhostList);
         }
@@ -67,12 +66,17 @@ namespace GhostSpectator
 
         public void OnPlayerSpawn(PlayerSpawnEvent ev)
         {
-            if (Plugin.GhostList.Contains(ev.Player) && ev.Role != Plugin.GhostRole)
+            Plugin.Log.Debug("PlayerSpawnEvent");
+            if (Plugin.GhostList.Contains(ev.Player))
             {
                 Plugin.Log.Debug($"{ev.Player.GetNickname()} removed from list of ghost spectators.");
                 Plugin.GhostList.Remove(ev.Player);
                 ev.Player.SetGhostMode(false);
             }
+            //else if (Plugin.GhostsBeingSpawned.Contains(ev.Player))
+            //{
+	           // Plugin.GhostsBeingSpawned.Remove(ev.Player);
+            //}
         }
 
         public void OnPlayerHurt(ref PlayerHurtEvent ev)
