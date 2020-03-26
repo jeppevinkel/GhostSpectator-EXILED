@@ -89,7 +89,8 @@ namespace GhostSpectator
                 Events.PlayerHurtEvent += EventHandlers.OnPlayerHurt;
                 Events.TeamRespawnEvent += EventHandlers.OnTeamRespawn;
                 Events.PlayerDeathEvent += EventHandlers.OnPlayerDeath;
-                Events.PlayerSpawnEvent += EventHandlers.OnPlayerSpawn;
+                //Events.PlayerSpawnEvent += EventHandlers.OnPlayerSpawn;
+                Events.SetClassEvent += EventHandlers.OnSetClass;
                 Events.ItemChangedEvent += EventHandlers.OnItemChanged;
                 Events.PlayerJoinEvent += EventHandlers.OnPlayerJoin;
 
@@ -109,7 +110,7 @@ namespace GhostSpectator
                     Log.Error($"Patching failed! {exception}");
                 }
 
-                Timing.RunCoroutine(EventHandlers.SlowUpdate());
+                //Timing.RunCoroutine(EventHandlers.SlowUpdate());
 
                 Log.Info($"{getName} loaded. c:");
             }
@@ -128,7 +129,8 @@ namespace GhostSpectator
             Events.PlayerHurtEvent -= EventHandlers.OnPlayerHurt;
             Events.TeamRespawnEvent -= EventHandlers.OnTeamRespawn;
             Events.PlayerDeathEvent -= EventHandlers.OnPlayerDeath;
-            Events.PlayerSpawnEvent -= EventHandlers.OnPlayerSpawn;
+            //Events.PlayerSpawnEvent -= EventHandlers.OnPlayerSpawn;
+            Events.SetClassEvent -= EventHandlers.OnSetClass;
             Events.ItemChangedEvent -= EventHandlers.OnItemChanged;
             Events.PlayerJoinEvent -= EventHandlers.OnPlayerJoin;
 

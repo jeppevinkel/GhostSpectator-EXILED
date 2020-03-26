@@ -56,12 +56,12 @@ namespace GhostSpectator
                 return;
 	        }
 
-            if (!Plugin.GhostList.Contains(ev.Player))
-            {
-                Plugin.Log.Debug($"{ev.Player.GetNickname()} added to list of ghost spectators.");
-                Plugin.GhostList.Add(ev.Player);
-            }
-            Timing.RunCoroutine(SpawnGhost(ev.Player), 3);
+	        if (!Plugin.GhostList.Contains(ev.Player))
+	        {
+		        Plugin.Log.Debug($"{ev.Player.GetNickname()} added to list of ghost spectators.");
+		        Plugin.GhostList.Add(ev.Player);
+	        }
+	        Timing.RunCoroutine(SpawnGhost(ev.Player, 0.1f));
         }
 
         public void OnPlayerSpawn(PlayerSpawnEvent ev)
@@ -73,10 +73,31 @@ namespace GhostSpectator
                 Plugin.GhostList.Remove(ev.Player);
                 ev.Player.SetGhostMode(false);
             }
-            //else if (Plugin.GhostsBeingSpawned.Contains(ev.Player))
-            //{
-	           // Plugin.GhostsBeingSpawned.Remove(ev.Player);
-            //}
+
+            if (Plugin.GhostSettings.ContainsKey(ev.Player.GetUserId()) && Plugin.GhostSettings[ev.Player.GetUserId()].specmode == GhostSettings.Specmode.Ghost && ev.Player.GetRole() == RoleType.Spectator)
+            {
+	            Plugin.Log.Debug($"{ev.Player.GetNickname()} added to list of ghost spectators.");
+	            Plugin.GhostList.Add(ev.Player);
+	            Timing.RunCoroutine(SpawnGhost(ev.Player, 0.1f));
+            }
+        }
+
+        public void OnSetClass(SetClassEvent ev)
+        {
+	        Plugin.Log.Debug("SetClassEvent");
+	        if (Plugin.GhostList.Contains(ev.Player))
+	        {
+		        Plugin.Log.Debug($"{ev.Player.GetNickname()} removed from list of ghost spectators.");
+		        Plugin.GhostList.Remove(ev.Player);
+		        ev.Player.SetGhostMode(false);
+	        }
+
+	        if (Plugin.GhostSettings.ContainsKey(ev.Player.GetUserId()) && Plugin.GhostSettings[ev.Player.GetUserId()].specmode == GhostSettings.Specmode.Ghost && ev.Player.GetRole() == RoleType.Spectator)
+	        {
+		        Plugin.Log.Debug($"{ev.Player.GetNickname()} added to list of ghost spectators.");
+		        Plugin.GhostList.Add(ev.Player);
+		        Timing.RunCoroutine(SpawnGhost(ev.Player, 0.1f));
+	        }
         }
 
         public void OnPlayerHurt(ref PlayerHurtEvent ev)
@@ -115,7 +136,15 @@ namespace GhostSpectator
                 {
                     case GhostSettings.Specmode.Normal:
 	                    Plugin.GhostSettings[ev.Player.GetUserId()].specmode = GhostSettings.Specmode.Ghost;
-	                    ev.ReturnMessage = Translation.GetText().specmodeGhost;
+
+	                    if (Plugin.GhostSettings.ContainsKey(ev.Player.GetUserId()) && Plugin.GhostSettings[ev.Player.GetUserId()].specmode == GhostSettings.Specmode.Ghost && ev.Player.GetRole() == RoleType.Spectator)
+	                    {
+		                    Plugin.Log.Debug($"{ev.Player.GetNickname()} added to list of ghost spectators.");
+		                    Plugin.GhostList.Add(ev.Player);
+		                    Timing.RunCoroutine(SpawnGhost(ev.Player, 0.1f));
+                        }
+
+                        ev.ReturnMessage = Translation.GetText().specmodeGhost;
 	                    ev.Color = "blue";
                         break;
                     case GhostSettings.Specmode.Ghost:
@@ -166,7 +195,7 @@ namespace GhostSpectator
         {
             while (true)
             {
-                yield return Timing.WaitForSeconds(5);
+                yield return Timing.WaitForSeconds(10);
 
                 foreach (var player in Player.GetHubs())
                 {
@@ -177,6 +206,10 @@ namespace GhostSpectator
                         Plugin.GhostList.Add(player);
                     }
                     Timing.RunCoroutine(SpawnGhost(player, 0));
+                    yield return Timing.WaitForOneFrame;
+                    yield return Timing.WaitForOneFrame;
+                    yield return Timing.WaitForOneFrame;
+                    yield return Timing.WaitForOneFrame;
                 }
             }
         }
