@@ -90,6 +90,7 @@ namespace GhostSpectator
                 Events.PlayerDeathEvent += EventHandlers.OnPlayerDeath;
                 Events.PlayerSpawnEvent += EventHandlers.OnPlayerSpawn;
                 Events.ItemChangedEvent += EventHandlers.OnItemChanged;
+                Events.PlayerJoinEvent += EventHandlers.OnPlayerJoin;
 
                 Events.RemoteAdminCommandEvent += CommandHandler.OnRACommand;
                 Events.ConsoleCommandEvent += EventHandlers.OnConsoleCommand;
@@ -128,6 +129,7 @@ namespace GhostSpectator
             Events.PlayerDeathEvent -= EventHandlers.OnPlayerDeath;
             Events.PlayerSpawnEvent -= EventHandlers.OnPlayerSpawn;
             Events.ItemChangedEvent -= EventHandlers.OnItemChanged;
+            Events.PlayerJoinEvent -= EventHandlers.OnPlayerJoin;
 
             Events.RemoteAdminCommandEvent -= CommandHandler.OnRACommand;
             Events.ConsoleCommandEvent -= EventHandlers.OnConsoleCommand;

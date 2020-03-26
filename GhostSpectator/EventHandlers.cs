@@ -26,6 +26,14 @@ namespace GhostSpectator
             Plugin.GhostList.Clear();
         }
 
+		public void OnPlayerJoin(PlayerJoinEvent ev)
+		{
+			if (!Plugin.GhostSettings.ContainsKey(ev.Player.GetUserId()))
+			{
+				Plugin.GhostSettings.Add(ev.Player.GetUserId(), new GhostSettings());
+			}
+		}
+
         public void OnPickupItem(ref PickupItemEvent ev)
         {
             if (Plugin.AllowPickup || !Plugin.GhostList.Contains(ev.Player)) return;
@@ -94,8 +102,7 @@ namespace GhostSpectator
 
         public void OnConsoleCommand(ConsoleCommandEvent ev)
         {
-	        ev.ReturnMessage = ev.Command;
-
+	        Log.Debug($"{ev.Player.GetNickname()} used the command: '{ev.Command}'");
 	        if (ev.Command.ToLower() == "specmode")
 	        {
 		        if (!Plugin.GhostSettings.ContainsKey(ev.Player.GetUserId())) Plugin.GhostSettings.Add(ev.Player.GetUserId(), new GhostSettings());
@@ -155,7 +162,7 @@ namespace GhostSpectator
         {
             while (true)
             {
-                yield return Timing.WaitForSeconds(10);
+                yield return Timing.WaitForSeconds(5);
 
                 foreach (var player in Player.GetHubs())
                 {
