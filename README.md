@@ -14,7 +14,7 @@
 | gs_ghost_message | string     | "You have been spawned as a spectator ghost.\n Drop your <color=#ff0000>7.62</color> to be <color=#ff0000>teleported</color> to the <color=#ff0000>next</color> player\n  Drop your <color=#ff0000>5.56</color> to be <color=#ff0000>teleported</color> to the <color=#ff0000>previous</color> player" | The messages displayed to spectators.           |
 
 ## Todo
-* Spectator type toggle
+* ~~Spectator type toggle~~
 * ~~No nuke interact~~
 * ~~No weapon manager interact~~
 * ~~Don't show door disallows~~
