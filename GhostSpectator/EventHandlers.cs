@@ -42,7 +42,12 @@ namespace GhostSpectator
 
         public void OnPlayerDeath(ref PlayerDeathEvent ev)
         {
-	        if (!Plugin.GhostSettings.ContainsKey(ev.Player.GetUserId()) || Plugin.GhostSettings[ev.Player.GetUserId()].specmode != GhostSettings.Specmode.Ghost) return;
+	        if (!Plugin.GhostSettings.ContainsKey(ev.Player.GetUserId()) ||
+	            Plugin.GhostSettings[ev.Player.GetUserId()].specmode != GhostSettings.Specmode.Ghost)
+	        {
+                if (!string.IsNullOrEmpty(Plugin.SpecMessage)) ev.Player.BroadcastMessage(Plugin.SpecMessage);
+                return;
+	        }
 
             if (!Plugin.GhostList.Contains(ev.Player))
             {

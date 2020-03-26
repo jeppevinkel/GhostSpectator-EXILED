@@ -17,9 +17,17 @@
 | gs_allow_damage  | boolean    | false                                                                                                                                                                                                                                                                                                 | Allows the spectators to do damage.             |
 | gs_allow_pickup  | boolean    | false                                                                                                                                                                                                                                                                                                 | Allows the spectators to pick items up.         |
 | gs_god_mode      | boolean    | true                                                                                                                                                                                                                                                                                                  | Enables god mode for the spectators.            |
-| gs_interact      | boolean    | false                                                                                                                                                                                                                                                                                                 | Allows the spectators to interact with the map. |
-| gs_noclip        | boolean    | true                                                                                                                                                                                                                                                                                                  | Enables noclip for the spectators.              |
-| gs_ghost_message | string     | "You have been spawned as a spectator ghost.\n Drop your <color=#ff0000>7.62</color> to be <color=#ff0000>teleported</color> to the <color=#ff0000>next</color> player\n  Drop your <color=#ff0000>5.56</color> to be <color=#ff0000>teleported</color> to the <color=#ff0000>previous</color> player" | The messages displayed to spectators.           |
+|gs_interact|boolean|false|Allows the spectators to interact with the map.|
+|gs_noclip| boolean|true|Enables noclip for the spectators.|
+|gs_default_mode|string|Normal|Sets the default spectating mode.|
+|gs_ghost_message|string|"You have been spawned as a spectator ghost.\n Drop your <color=#ff0000>7.62</color> to be <color=#ff0000>teleported</color> to the <color=#ff0000>next</color> player\n  Drop your <color=#ff0000>5.56</color> to be <color=#ff0000>teleported</color> to the <color=#ff0000>previous</color> player"|The messages displayed to spectators.|
+|gs_spec_message|string|"This server is using <color=#ff0000>GhostSpectator</color>\nTo enable ghost mode, open your console and type <color=#ff0000>.specmode</color>"|The message displayed to spectators in normal spectator mode.|
+
+### Spectator modes
+```
+Normal
+Ghost
+```
 
 ## Todo
 * ~~Spectator type toggle~~

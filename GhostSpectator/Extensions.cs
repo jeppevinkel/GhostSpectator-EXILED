@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Remoting.Messaging;
+using Assets._Scripts.Dissonance;
 using EXILED;
 using EXILED.Extensions;
 using GhostSpectator.Localization;
@@ -167,6 +168,16 @@ namespace GhostSpectator
         {
             rh.SetRole(Plugin.GhostRole);
             rh.SetGhostMode(true);
+            //Timing.CallDelayed(1, rh.SetSpectatorVoice);
+        }
+
+        public static void SetSpectatorVoice(this ReferenceHub rh)
+        {
+	        rh.GetComponent<DissonanceUserSetup>().SpectatorChat = true;
+	        rh.GetComponent<DissonanceUserSetup>().EnableListening(TriggerType.Role, Assets._Scripts.Dissonance.RoleType.Ghost);
+	        rh.GetComponent<DissonanceUserSetup>().EnableSpeaking(TriggerType.Role, Assets._Scripts.Dissonance.RoleType.Ghost);
+	        rh.GetComponent<DissonanceUserSetup>().CallTargetUpdateForTeam(Team.RIP);
+	        rh.GetComponent<DissonanceUserSetup>().TargetUpdateForTeam(Team.RIP);
         }
 
         public static void PlayGhostMessage(this ReferenceHub rh)

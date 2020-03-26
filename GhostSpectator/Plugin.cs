@@ -35,9 +35,12 @@ namespace GhostSpectator
         public string Lang;
         public static bool GhostInteract;
         public static string GhostMessage;
+        public static string SpecMessage;
         public static bool GhostGod;
         public static bool GhostRagdoll;
         public static bool GhostNoclip;
+        public static bool GhostSpectatorVoiceChat;
+        public static GhostSettings.Specmode DefaultSpecMode;
 
         private HarmonyInstance _instance;
         private static int _patchFixer;
@@ -146,10 +149,16 @@ namespace GhostSpectator
             GhostInteract = Config.GetBool("gs_interact", false);
             GhostRagdoll = Config.GetBool("gs_ragdoll", false);
             GhostNoclip = Config.GetBool("gs_noclip", true);
+            GhostSpectatorVoiceChat = Config.GetBool("gs_global_voice", false);
+            if (!Enum.TryParse(Config.GetString("gs_default_mode", "Normal"), true,
+	            out DefaultSpecMode)) DefaultSpecMode = GhostSpectator.GhostSettings.Specmode.Normal;
             GhostMessage = Config.GetString("gs_ghost_message",
                 "You have been spawned as a spectator ghost.\n" +
                 "Drop your <color=#ff0000>7.62</color> to be <color=#ff0000>teleported</color> to the <color=#ff0000>next</color> player\n" +
                 "Drop your <color=#ff0000>5.56</color> to be <color=#ff0000>teleported</color> to the <color=#ff0000>previous</color> player");
+            SpecMessage = Config.GetString("gs_spec_message",
+                "This server is using <color=#ff0000>GhostSpectator</color>\n" +
+                "To enable ghost mode, open your console and type <color=#ff0000>.specmode</color>");
             Lang = Config.GetString("gs_language",
                 "en-US");
         }

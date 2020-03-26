@@ -9,7 +9,7 @@ namespace GhostSpectator
 	public class GhostSettings
 	{
 		public int pos = 0;
-		public Specmode specmode = Specmode.Normal;
+		public Specmode specmode = Plugin.DefaultSpecMode;
 		public bool specboard = false;
 
 		public enum Specmode
