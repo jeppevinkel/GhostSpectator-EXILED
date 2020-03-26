@@ -52,7 +52,7 @@ namespace GhostSpectator
 	        if (!Plugin.GhostSettings.ContainsKey(ev.Player.GetUserId()) ||
 	            Plugin.GhostSettings[ev.Player.GetUserId()].specmode != GhostSettings.Specmode.Ghost)
 	        {
-                if (!string.IsNullOrEmpty(Plugin.SpecMessage)) ev.Player.BroadcastMessage(Plugin.SpecMessage);
+                if (!string.IsNullOrEmpty(Plugin.SpecMessage)) ev.Player.Broadcast(6, Plugin.SpecMessage);
                 return;
 	        }
 
@@ -64,23 +64,23 @@ namespace GhostSpectator
 	        Timing.RunCoroutine(SpawnGhost(ev.Player, 0.1f));
         }
 
-        public void OnPlayerSpawn(PlayerSpawnEvent ev)
-        {
-            Plugin.Log.Debug("PlayerSpawnEvent");
-            if (Plugin.GhostList.Contains(ev.Player))
-            {
-                Plugin.Log.Debug($"{ev.Player.GetNickname()} removed from list of ghost spectators.");
-                Plugin.GhostList.Remove(ev.Player);
-                ev.Player.SetGhostMode(false);
-            }
+        //public void OnPlayerSpawn(PlayerSpawnEvent ev)
+        //{
+        //    Plugin.Log.Debug("PlayerSpawnEvent");
+        //    if (Plugin.GhostList.Contains(ev.Player))
+        //    {
+        //        Plugin.Log.Debug($"{ev.Player.GetNickname()} removed from list of ghost spectators.");
+        //        Plugin.GhostList.Remove(ev.Player);
+        //        ev.Player.SetGhostMode(false);
+        //    }
 
-            if (Plugin.GhostSettings.ContainsKey(ev.Player.GetUserId()) && Plugin.GhostSettings[ev.Player.GetUserId()].specmode == GhostSettings.Specmode.Ghost && ev.Player.GetRole() == RoleType.Spectator)
-            {
-	            Plugin.Log.Debug($"{ev.Player.GetNickname()} added to list of ghost spectators.");
-	            Plugin.GhostList.Add(ev.Player);
-	            Timing.RunCoroutine(SpawnGhost(ev.Player, 0.1f));
-            }
-        }
+        //    if (Plugin.GhostSettings.ContainsKey(ev.Player.GetUserId()) && Plugin.GhostSettings[ev.Player.GetUserId()].specmode == GhostSettings.Specmode.Ghost && ev.Player.GetRole() == RoleType.Spectator)
+        //    {
+	       //     Plugin.Log.Debug($"{ev.Player.GetNickname()} added to list of ghost spectators.");
+	       //     Plugin.GhostList.Add(ev.Player);
+	       //     Timing.RunCoroutine(SpawnGhost(ev.Player, 0.1f));
+        //    }
+        //}
 
         public void OnSetClass(SetClassEvent ev)
         {
@@ -191,28 +191,28 @@ namespace GhostSpectator
             }
         }
 
-        public IEnumerator<float> SlowUpdate()
-        {
-            while (true)
-            {
-                yield return Timing.WaitForSeconds(10);
+        //public IEnumerator<float> SlowUpdate()
+        //{
+        //    while (true)
+        //    {
+        //        yield return Timing.WaitForSeconds(10);
 
-                foreach (var player in Player.GetHubs())
-                {
-                    if (player.GetRole() != RoleType.Spectator || !Plugin.GhostSettings.ContainsKey(player.GetUserId()) || Plugin.GhostSettings[player.GetUserId()].specmode != GhostSettings.Specmode.Ghost) continue;
-                    if (!Plugin.GhostList.Contains(player))
-                    {
-                        Plugin.Log.Debug($"{player.GetNickname()} added to list of ghost spectators.");
-                        Plugin.GhostList.Add(player);
-                    }
-                    Timing.RunCoroutine(SpawnGhost(player, 0));
-                    yield return Timing.WaitForOneFrame;
-                    yield return Timing.WaitForOneFrame;
-                    yield return Timing.WaitForOneFrame;
-                    yield return Timing.WaitForOneFrame;
-                }
-            }
-        }
+        //        foreach (var player in Player.GetHubs())
+        //        {
+        //            if (player.GetRole() != RoleType.Spectator || !Plugin.GhostSettings.ContainsKey(player.GetUserId()) || Plugin.GhostSettings[player.GetUserId()].specmode != GhostSettings.Specmode.Ghost) continue;
+        //            if (!Plugin.GhostList.Contains(player))
+        //            {
+        //                Plugin.Log.Debug($"{player.GetNickname()} added to list of ghost spectators.");
+        //                Plugin.GhostList.Add(player);
+        //            }
+        //            Timing.RunCoroutine(SpawnGhost(player, 0));
+        //            yield return Timing.WaitForOneFrame;
+        //            yield return Timing.WaitForOneFrame;
+        //            yield return Timing.WaitForOneFrame;
+        //            yield return Timing.WaitForOneFrame;
+        //        }
+        //    }
+        //}
 
         public IEnumerator<float> SpawnGhost(ReferenceHub rh, float delay = 5)
         {
