@@ -64,6 +64,11 @@ namespace GhostSpectator
 
         public void OnPlayerHurt(ref PlayerHurtEvent ev)
         {
+	        if (Plugin.GhostList.Contains(ev.Player) && Plugin.GhostGod)
+	        {
+		        ev.Amount = 0;
+	        }
+
             if (!Plugin.GhostList.Contains(ev.Attacker) || Plugin.AllowDamage) return;
             Plugin.Log.Debug($"Prevented {ev.Attacker.GetNickname()} from doing harm as ghost spectator.");
             ev.Amount = 0;
