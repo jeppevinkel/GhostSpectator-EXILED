@@ -68,6 +68,10 @@ namespace GhostSpectator.Localization
 
             foreach (string file in translationFiles)
             {
+                if (file.Contains("BACKUP"))
+	            {
+                    continue;
+	            }
                 try
                 {
                     Language trans;
