@@ -35,8 +35,8 @@ Translation names are used in the ISO format, meaning translations can be picked
 Examples:
 ```json
 en 			// default English
-en_US 		// American Egnlish if available, otherwise default English
-en_UK		// British English if available, otherwise default Enlish
+en-US 		// American Egnlish if available, otherwise default English
+en-UK		// British English if available, otherwise default Enlish
 ```
 If you make custom translation files for languages that aren't included by default, I'd be more than happy to include them in future updates if you will share them.
 
