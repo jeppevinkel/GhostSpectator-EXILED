@@ -1,5 +1,13 @@
 # GhostSpectator
 
+## Commands
+
+| Command | Description |
+|-----------|---------------|
+|.specmode|Toggles between the regular spectator mode, and ghost spectator mode|
+
+*All commands are for the console, and not RemoteAdmin.*
+
 ## Settings
 
 | Setting Key      | Value Type | Default Value                                                                                                                                                                                                                                                                                         | Description                                     |
