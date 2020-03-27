@@ -4,11 +4,18 @@
 
 ## Commands
 
+### Console Commands
+
 | Command | Description |
 |-----------|---------------|
-|.specmode|Toggles between the regular spectator mode, and ghost spectator mode|
+|.specmode|Toggles between the regular spectator mode, and ghost spectator mode.|
 
-*All commands are for the console, and not RemoteAdmin.*
+### Remote Admin Commands
+
+| Command | Description |
+|-----------|---------------|
+|gs_translation reload|Reloads the translation files.|
+|gs_translation set <language>|Changes the language of the plugin.|
 
 ## Settings
 
@@ -46,6 +53,7 @@ Current default languages:
 ```yml
 en
 da
+de
 ```
 
 ## Todo
