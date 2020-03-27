@@ -92,7 +92,7 @@ namespace GhostSpectator
 		        ev.Player.SetGhostMode(false);
 	        }
 
-	        if (Plugin.GhostSettings.ContainsKey(ev.Player.GetUserId()) && Plugin.GhostSettings[ev.Player.GetUserId()].specmode == GhostSettings.Specmode.Ghost && ev.Player.GetRole() == RoleType.Spectator)
+	        if (!string.IsNullOrEmpty(ev.Player.GetUserId()) && Plugin.GhostSettings.ContainsKey(ev.Player.GetUserId()) && Plugin.GhostSettings[ev.Player.GetUserId()].specmode == GhostSettings.Specmode.Ghost && ev.Player.GetRole() == RoleType.Spectator)
 	        {
 		        Plugin.Log.Debug($"{ev.Player.GetNickname()} added to list of ghost spectators.");
 		        Plugin.GhostList.Add(ev.Player);

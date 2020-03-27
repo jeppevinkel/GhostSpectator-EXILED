@@ -54,9 +54,9 @@ namespace GhostSpectator.Patches
                         if ((double)mtfRespawn.timeToNextRespawn < (mtfRespawn.nextWaveIsCI ? 13.5 : 18.0) && !mtfRespawn.loaded)
                         {
                             mtfRespawn.loaded = true;
-                            if (PlayerManager.players.Any<GameObject>((Func<GameObject, bool>)(ply =>
+                            if (!Plugin.GhostList.IsEmpty() || PlayerManager.players.Any<GameObject>((Func<GameObject, bool>)(ply =>
                             {
-	                            return (ply.GetComponent<CharacterClassManager>().CurClass == RoleType.Spectator || Plugin.GhostList.Contains(ply.GetComponent<ReferenceHub>()));
+	                            return (ply.GetComponent<CharacterClassManager>().CurClass == RoleType.Spectator);
                             })))
                             {
                                 mtfRespawn.chopperStarted = true;
@@ -69,11 +69,11 @@ namespace GhostSpectator.Patches
                         if ((double)mtfRespawn.timeToNextRespawn < 0.0)
                         {
                             float maxDelay = 0.0f;
-                            if (!mtfRespawn.nextWaveIsCI && PlayerManager.players.Any<GameObject>((Func<GameObject, bool>)(item =>
+                            if (!mtfRespawn.nextWaveIsCI && (!Plugin.GhostList.IsEmpty() || PlayerManager.players.Any<GameObject>((Func<GameObject, bool>)(item =>
                             {
 	                            return (item.GetComponent<CharacterClassManager>().CurClass == RoleType.Spectator &&
-	                                   !item.GetComponent<ServerRoles>().OverwatchEnabled) || Plugin.GhostList.Contains(item.GetComponent<ReferenceHub>());
-                            })))
+	                                   !item.GetComponent<ServerRoles>().OverwatchEnabled);
+                            }))))
                             {
                                 bool warheadInProgress;
                                 bool cassieFree;
