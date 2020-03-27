@@ -62,6 +62,7 @@ namespace GhostSpectator
                 Translation.LoadTranslations();
 
                 CultureInfo ci;
+
                 try
                 {
                     ci = CultureInfo.GetCultureInfo(Lang);
@@ -165,7 +166,7 @@ namespace GhostSpectator
                 "This server is using <color=#ff0000>GhostSpectator</color>\n" +
                 "To enable ghost mode, open your console and type <color=#ff0000>.specmode</color>");
             Lang = Config.GetString("gs_language",
-                "en-US");
+                "en-US").Replace("\"", "");
         }
 
         public override void OnReload()

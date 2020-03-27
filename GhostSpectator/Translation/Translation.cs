@@ -56,6 +56,7 @@ namespace GhostSpectator.Localization
             Plugin.Log.Info("Loading translations...");
             foreach (var kvp in DefaultLanguages)
             {
+	            if (Langs.ContainsKey(kvp.Key)) continue;
                 Langs.Add(kvp.Key, kvp.Value);
             }
 
@@ -146,29 +147,55 @@ namespace GhostSpectator.Localization
                 new Language()
             },
             {
-                "da",
-                new Language
-                {
-                    change914KnobDenied = "Tilskuere kan ikke indstille SCP-914",
-                    containDenied = "Tilskuere kan ikke fange SCP'er.",
-                    detonateWarheadDenied = "Tilskuere kan ikke detonere sprænghovedet.",
-                    detonationCancelDenied = "Tilskuere kan ikke annullere detonationen.",
-                    doorDenied = "Tilskuere kan ikke åbne døre.",
-                    elevatorTeleport = "Teleporterer igennem elevatoren.",
-                    generatorDenied = "Tilskuere kan ikke bruge generatore.",
-                    intercomDenied = "Tilskuere kan ikke bruge samtaleanlægget.",
-                    leverDenied = "Tilskuere kan ikke bruge håndtag.",
-                    lockerDenied = "Tilskuere kan ikke åbne skabe.",
-                    notImplementedYet = "Denne funktion er ikke implementeret endnu.",
-                    teleportNone = "Ingen spillere fundet.",
-                    teleportTo = "Tilskurer nu {0}.",
-                    use914Denied = "Tilskuere kan ikke bruge SCP-914.",
-                    warheadEnableDenied = "Tilskuere kan ikke aktivere sprænghovedet.",
-                    warheadKeycardDenied = "Tilskuere kan ikke aktivere sprænghovedknappen.",
-                    workstationPlaceDenied = "Tilskuere kan ikke bruge arbejdstationer.",
-                    workstationTakeDenied = "Tilskuere kan ikke bruge arbejdstationer.",
-                    specmodeNormal = "Du har slået ghost mode fra.",
-                    specmodeGhost = "Du har slået ghost mode til."
+	            "da",
+	            new Language
+	            {
+		            change914KnobDenied = "Tilskuere kan ikke indstille SCP-914",
+		            containDenied = "Tilskuere kan ikke fange SCP'er.",
+		            detonateWarheadDenied = "Tilskuere kan ikke detonere sprænghovedet.",
+		            detonationCancelDenied = "Tilskuere kan ikke annullere detonationen.",
+		            doorDenied = "Tilskuere kan ikke åbne døre.",
+		            elevatorTeleport = "Teleporterer igennem elevatoren.",
+		            generatorDenied = "Tilskuere kan ikke bruge generatore.",
+		            intercomDenied = "Tilskuere kan ikke bruge samtaleanlægget.",
+		            leverDenied = "Tilskuere kan ikke bruge håndtag.",
+		            lockerDenied = "Tilskuere kan ikke åbne skabe.",
+		            notImplementedYet = "Denne funktion er ikke implementeret endnu.",
+		            teleportNone = "Ingen spillere fundet.",
+		            teleportTo = "Tilskurer nu {0}.",
+		            use914Denied = "Tilskuere kan ikke bruge SCP-914.",
+		            warheadEnableDenied = "Tilskuere kan ikke aktivere sprænghovedet.",
+		            warheadKeycardDenied = "Tilskuere kan ikke aktivere sprænghovedknappen.",
+		            workstationPlaceDenied = "Tilskuere kan ikke bruge arbejdstationer.",
+		            workstationTakeDenied = "Tilskuere kan ikke bruge arbejdstationer.",
+		            specmodeNormal = "Du har slået ghost mode fra.",
+		            specmodeGhost = "Du har slået ghost mode til."
+	            }
+            },
+            {
+	            "de",
+	            new Language
+	            {
+		            change914KnobDenied = "Zuschauer können SCP-914 nicht verändern.",
+		            containDenied = "Zuschauer können SCP's nicht eindämmen.",
+		            detonateWarheadDenied = "Zuschauer können den Alpha Warhead nicht zünden.",
+		            detonationCancelDenied = "Zuschauer können die Detonation nicht verhindern.",
+		            doorDenied = "Zuschauer können nicht mit Türen interagieren.",
+		            elevatorTeleport = "Teleportiere durch den Aufzug.",
+		            generatorDenied = "Zuschauer können nicht mit Generatoren interagieren.",
+		            intercomDenied = "Zuschauer können das Intercom nicht benutzen.",
+		            leverDenied = "Zuschauer können nicht mit Hebel interagieren.",
+		            lockerDenied = "Zuschauer können nicht mit Schränken interagieren.",
+		            notImplementedYet = "Dieses Feature wurde noch nicht implementiert.",
+		            teleportNone = "Kein Spieler gefunden.",
+		            teleportTo = "Du schaust nun {0} zu.",
+		            use914Denied = "Zuschauer können SCP-914 nicht benutzen.",
+		            warheadEnableDenied = "Zuschauer können den Alpha Warhead nicht aktivieren.",
+		            warheadKeycardDenied = "Zuschauer können den Alpha Warhead Knopf nicht aktivieren.",
+		            workstationPlaceDenied = "Zuschauer können keine Workstations verwenden.",
+		            workstationTakeDenied = "Zuschauer können keine Workstations verwenden.",
+		            specmodeNormal = "Du bist nun im normalen Zuschauermodus.",
+		            specmodeGhost = "Du bist nun im Geister-Zuschauermodus."
                 }
             }
         };

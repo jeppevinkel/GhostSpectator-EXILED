@@ -27,16 +27,27 @@ namespace GhostSpectator
                     switch (args[0])
                     {
                         case "reload":
-                            Plugin.Log.Info($"{ev.Sender.Nickname} has reloaded the translation files...");
-                            ev.Sender.RaMessage("Reloading the translations...", true);
-                            Translation.LoadTranslations();
+	                        try
+	                        {
+		                        Plugin.Log.Info($"{ev.Sender.Nickname} has reloaded the translation files...");
+		                        ev.Sender.RaMessage("Reloading the translations...", true);
+		                        Translation.LoadTranslations();
+                            }
+	                        catch (Exception e)
+	                        {
+		                        Plugin.Log.Error($"{e}");
+                                ev.Sender.RaMessage($"An error occured: {e}");
+	                        }
+                            
                             break;
                         case "set":
                         {
                             CultureInfo ci;
-                            try
+                            string lang = args[1].Replace("\"", "");
+	                        try
                             {
-                                ci = CultureInfo.GetCultureInfo(args[1]);
+                                
+	                            ci = CultureInfo.GetCultureInfo(lang);
 
                                 CultureInfo.DefaultThreadCurrentCulture = ci;
                                 CultureInfo.DefaultThreadCurrentUICulture = ci;
@@ -49,9 +60,9 @@ namespace GhostSpectator
                             catch (Exception e)
                             {
                                 ci = CultureInfo.GetCultureInfo("en");
-                                Log.Error($"{args[1]} is not a valid language. Defaulting to English.");
-                                Log.Error($"{e.Message}");
-                                ev.Sender.RaMessage($"{args[1]} is not a valid language.", false);
+                                Log.Error($"{lang} is not a valid language. Defaulting to English.");
+                                Log.Error($"{e}");
+                                ev.Sender.RaMessage($"{lang} is not a valid language.", false);
                             }
 
                             break;
