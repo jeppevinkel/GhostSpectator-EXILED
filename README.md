@@ -1,5 +1,7 @@
 # GhostSpectator
 
+*Disclaimer: Because this plugin has to modify a big chunk of the core server functions to work, there's a chance some plugins might conflict with it.*
+
 ## Commands
 
 | Command | Description |
