@@ -217,7 +217,7 @@ namespace GhostSpectator
         public IEnumerator<float> SpawnGhost(ReferenceHub rh, float delay = 5)
         {
             yield return Timing.WaitForSeconds(delay);
-            if (rh.GetRole() == Plugin.GhostRole) yield break;
+            if (rh.GetRole() == Plugin.GhostRole || rh.GetRole() != RoleType.Spectator) yield break;
             rh.PlayGhostMessage();
             rh.SpawnGhost();
             yield return Timing.WaitForSeconds(1f);
