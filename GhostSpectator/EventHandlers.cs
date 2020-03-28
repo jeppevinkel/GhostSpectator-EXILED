@@ -132,6 +132,18 @@ namespace GhostSpectator
 	        {
 		        if (!Plugin.GhostSettings.ContainsKey(ev.Player.GetUserId())) Plugin.GhostSettings.Add(ev.Player.GetUserId(), new GhostSettings());
 
+		        if (Plugin.RateLimited.Contains(ev.Player))
+		        {
+					ev.Player.ClearBroadcasts();
+					ev.Player.Broadcast(1, Translation.GetText().rateLimited);
+					ev.ReturnMessage = Translation.GetText().rateLimited;
+					ev.Color = "red";
+					return;
+		        }
+
+		        Plugin.RateLimited.Add(ev.Player);
+		        Timing.CallDelayed(Plugin.RateLimitTime, () => Plugin.RateLimited.Remove(ev.Player));
+
                 switch (Plugin.GhostSettings[ev.Player.GetUserId()].specmode)
                 {
                     case GhostSettings.Specmode.Normal:

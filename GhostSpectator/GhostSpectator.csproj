@@ -54,14 +54,14 @@
     <Reference Include="EXILED_Permissions">
       <HintPath>..\..\EXILED-References\EXILED_Permissions.dll</HintPath>
     </Reference>
-    <Reference Include="Logger, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Logger, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Logger-EXILED\Logger\bin\Release\netstandard2.0\Logger.dll</HintPath>
     </Reference>
     <Reference Include="Mirror">
       <HintPath>..\..\EXILED-References\Mirror.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>

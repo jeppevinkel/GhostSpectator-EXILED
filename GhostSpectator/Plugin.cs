@@ -29,6 +29,8 @@ namespace GhostSpectator
         public static readonly List<ReferenceHub> GhostsBeingSpawned = new List<ReferenceHub>();
         public static RoleType GhostRole = RoleType.Tutorial;
 
+        public static HashSet<ReferenceHub> RateLimited = new HashSet<ReferenceHub>();
+
         public bool Enabled;
         public bool AllowDamage;
         public bool AllowPickup;
@@ -42,6 +44,7 @@ namespace GhostSpectator
         public static bool GhostNoclip;
         public static bool GhostSpectatorVoiceChat;
         public static GhostSettings.Specmode DefaultSpecMode;
+        public static float RateLimitTime;
 
         private HarmonyInstance _instance;
         private static int _patchFixer;
@@ -169,6 +172,7 @@ namespace GhostSpectator
                 "To enable ghost mode, open your console and type <color=#ff0000>.specmode</color>");
             Lang = Config.GetString("gs_language",
                 "en-US").Replace("\"", "");
+            RateLimitTime = Config.GetFloat("gz_rate_limit_time", 3);
         }
 
         public override void OnReload()

@@ -28,6 +28,7 @@
 |gs_god_mode		|boolean	|true		|Enables god mode for the spectators.												|
 |gs_interact		|boolean	|false		|Allows the spectators to interact with the map.									|
 |gs_noclip			|boolean	|true		|Enables noclip for the spectators.													|
+|gz_rate_limit_time	|float		|3			|How often the '.specmode' command can be used. (shorter times increase risk of glitching)|
 |gs_default_mode	|string		|"Normal"	|Sets the default spectating mode.													|
 |gs_language		|string		|"en-US"	|Sets the language to be used. Language files are located in the plugin folder.		|
 |gs_ghost_message	|string		|"You have been spawned as a spectator ghost.\n Drop your <color=#ff0000>7.62</color> to be <color=#ff0000>teleported</color> to the <color=#ff0000>next</color> player\n  Drop your <color=#ff0000>5.56</color> to be <color=#ff0000>teleported</color> to the <color=#ff0000>previous</color> player"|The messages displayed to spectators.|

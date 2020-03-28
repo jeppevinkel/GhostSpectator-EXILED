@@ -223,6 +223,7 @@ namespace GhostSpectator.Localization
             public string workstationTakeDenied = "Spectators can't use workstations.";
             public string specmodeNormal = "You have toggled normal spectating mode.";
             public string specmodeGhost = "You have toggled ghost spectating mode.";
+            public string rateLimited = "You have been rate-limited, please wait a few seconds before using this command.";
         }
     }
 }
