@@ -75,7 +75,7 @@ namespace GhostSpectator
 
         public static bool UseGhostItem(this ReferenceHub rh, ItemType item)
         {
-            if (!Plugin.GhostList.Contains(rh) || (item != ItemType.Ammo762 && item != ItemType.Ammo556 && item != ItemType.Ammo9mm)) return true;
+            if (!Plugin.GhostList.Contains(rh) || (item != ItemType.Ammo762 && item != ItemType.Ammo556 && item != ItemType.Ammo9mm && item != ItemType.Flashlight)) return true;
             Plugin.Log.Debug($"{rh.GetNickname()} attempting ghost spectator teleport.");
             List<ReferenceHub> players = Player.GetHubs().Where(p => !Plugin.GhostList.Contains(p) && p.GetRole() != RoleType.None &&
                                                                      p.GetRole() != RoleType.Spectator && p.GetRole() != RoleType.Tutorial).ToList();

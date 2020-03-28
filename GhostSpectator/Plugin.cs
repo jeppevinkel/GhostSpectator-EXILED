@@ -94,6 +94,7 @@ namespace GhostSpectator
                 Events.SetClassEvent += EventHandlers.OnSetClass;
                 Events.ItemChangedEvent += EventHandlers.OnItemChanged;
                 Events.PlayerJoinEvent += EventHandlers.OnPlayerJoin;
+                Events.Scp914UpgradeEvent += EventHandlers.OnScp914Upgrade;
 
                 Events.RemoteAdminCommandEvent += CommandHandler.OnRACommand;
                 Events.ConsoleCommandEvent += EventHandlers.OnConsoleCommand;
@@ -134,6 +135,7 @@ namespace GhostSpectator
             Events.SetClassEvent -= EventHandlers.OnSetClass;
             Events.ItemChangedEvent -= EventHandlers.OnItemChanged;
             Events.PlayerJoinEvent -= EventHandlers.OnPlayerJoin;
+            Events.Scp914UpgradeEvent -= EventHandlers.OnScp914Upgrade;
 
             Events.RemoteAdminCommandEvent -= CommandHandler.OnRACommand;
             Events.ConsoleCommandEvent -= EventHandlers.OnConsoleCommand;
