@@ -10,7 +10,7 @@ using Harmony;
 namespace GhostSpectator.Patches
 {
     [HarmonyPatch(typeof(PlayerInteract))]
-    [HarmonyPatch(nameof(PlayerInteract.CallCmdSwitchAWButton))]
+    [HarmonyPatch(nameof(PlayerInteract.CallCmdDetonateWarhead))]
     class DetonateWarheadPatch
     {
         [HarmonyPriority(Priority.First)]

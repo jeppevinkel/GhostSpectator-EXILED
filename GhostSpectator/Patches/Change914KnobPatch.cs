@@ -21,7 +21,7 @@ namespace GhostSpectator.Patches
             ReferenceHub rh = __instance.GetComponent<ReferenceHub>();
 
             rh.ClearBroadcasts();
-            rh.Broadcast(3, Translation.GetText().containDenied);
+            rh.Broadcast(3, Translation.GetText().change914KnobDenied);
 
             return false;
         }

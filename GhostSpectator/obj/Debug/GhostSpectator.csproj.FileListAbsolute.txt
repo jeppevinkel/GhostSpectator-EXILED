@@ -19,3 +19,4 @@ D:\jeppe\Documents\Visual Studio Projects\GhostSpectator-EXILED\GhostSpectator\o
 D:\jeppe\Documents\Visual Studio Projects\GhostSpectator-EXILED\GhostSpectator\obj\Debug\GhostSpectator.dll
 D:\jeppe\Documents\Visual Studio Projects\GhostSpectator-EXILED\GhostSpectator\obj\Debug\GhostSpectator.pdb
 D:\jeppe\Documents\Visual Studio Projects\GhostSpectator-EXILED\GhostSpectator\bin\Debug\DissonanceVoip.dll
+D:\jeppe\Documents\Visual Studio Projects\GhostSpectator-EXILED\GhostSpectator\obj\Debug\GhostSpectator.csprojAssemblyReference.cache
