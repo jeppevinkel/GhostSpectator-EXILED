@@ -89,6 +89,7 @@
     <Compile Include="Patches\Contain106Patch.cs" />
     <Compile Include="Patches\DetonateWarheadPatch.cs" />
     <Compile Include="Patches\Generator079InteractPatch.cs" />
+    <Compile Include="Patches\GetTeamPatch.cs" />
     <Compile Include="Patches\MTFRespawnUpdatePatch.cs" />
     <Compile Include="Patches\PlayerEffectPatch.cs" />
     <Compile Include="Patches\SetClassEventPatch.cs" />

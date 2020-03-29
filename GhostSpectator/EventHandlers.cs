@@ -67,6 +67,7 @@ namespace GhostSpectator
         public void OnSetClass(SetClassEvent ev)
         {
 	        Plugin.Log.Debug("SetClassEvent");
+
 	        if (Plugin.GhostList.Contains(ev.Player))
 	        {
 		        Plugin.Log.Debug($"{ev.Player.GetNickname()} removed from list of ghost spectators.");
@@ -79,8 +80,8 @@ namespace GhostSpectator
 		        Plugin.Log.Debug($"{ev.Player.GetNickname()} added to list of ghost spectators.");
 		        Plugin.GhostList.Add(ev.Player);
 		        Timing.RunCoroutine(SpawnGhost(ev.Player, 0.2f));
-	        }
-        }
+			}
+		}
 
         public void OnPlayerHurt(ref PlayerHurtEvent ev)
         {
