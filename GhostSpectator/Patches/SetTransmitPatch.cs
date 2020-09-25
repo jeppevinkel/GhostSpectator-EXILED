@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EXILED.Extensions;
-using GhostSpectator.Localization;
-using Harmony;
-using UnityEngine;
+using Exiled.API.Features;
+using HarmonyLib;
 
 namespace GhostSpectator.Patches
 {
@@ -22,11 +16,11 @@ namespace GhostSpectator.Patches
         public static bool Prefix(Intercom __instance, bool player)
         {
             Plugin.Log.Debug("SetTransmitPatch");
-            if (!Plugin.GhostList.Contains(__instance.GetComponent<ReferenceHub>())) return true;
-            ReferenceHub rh = __instance.GetComponent<ReferenceHub>();
+            Player ply = Player.Get(__instance.gameObject);
+            if (!Plugin.GhostList.Contains(ply)) return true;
 
-            rh.ClearBroadcasts();
-            rh.Broadcast(3, Translation.GetText().intercomDenied);
+            ply.ClearBroadcasts();
+            ply.Broadcast(3, Translation.Translation.GetText().IntercomDenied);
 
             return false;
         }

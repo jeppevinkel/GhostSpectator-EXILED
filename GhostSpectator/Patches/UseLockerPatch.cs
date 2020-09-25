@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EXILED.Extensions;
-using Harmony;
-using UnityEngine;
-using System.Globalization;
-using GhostSpectator.Localization;
+using Exiled.API.Features;
+using HarmonyLib;
 
 namespace GhostSpectator.Patches
 {
@@ -15,20 +9,20 @@ namespace GhostSpectator.Patches
     [HarmonyPatch(nameof(PlayerInteract.CallCmdUseLocker))]
     [HarmonyPatch(new Type[]
     {
-        typeof(int),
-        typeof(int)
+        typeof(byte),
+        typeof(byte)
     })]
     class UseLockerPatch
     {
         [HarmonyPriority(Priority.First)]
-        public static bool Prefix(PlayerInteract __instance, int lockerId, int chamberNumber)
+        public static bool Prefix(PlayerInteract __instance, byte lockerId, byte chamberNumber)
         {
             Plugin.Log.Debug("UseLockerPatch");
-            if (!Plugin.GhostList.Contains(__instance.GetComponent<ReferenceHub>())) return true;
-            ReferenceHub rh = __instance.GetComponent<ReferenceHub>();
+            Player ply = Player.Get(__instance.gameObject);
+            if (!Plugin.GhostList.Contains(ply)) return true;
 
-            rh.ClearBroadcasts();
-            rh.Broadcast(3, Translation.GetText().lockerDenied);
+            ply.ClearBroadcasts();
+            ply.Broadcast(3, Translation.Translation.GetText().LockerDenied);
 
             return false;
         }

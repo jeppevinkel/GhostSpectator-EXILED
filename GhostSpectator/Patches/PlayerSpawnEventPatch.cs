@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Assets._Scripts.Dissonance;
-using Harmony;
+﻿using Exiled.API.Features;
+using HarmonyLib;
 
 namespace GhostSpectator.Patches
 {
@@ -20,14 +15,11 @@ namespace GhostSpectator.Patches
 		[HarmonyPriority(Priority.First)]
 		public static bool Prefix(CharacterClassManager __instance, bool lite = false, bool escape = false)
 		{
-			if (Plugin.GhostsBeingSpawned.Contains(__instance.GetComponent<ReferenceHub>()))
-			{
-				Plugin.Log.Debug("Caught the PlayerSpawnEvent.");
-				Plugin.GhostsBeingSpawned.Remove(__instance.GetComponent<ReferenceHub>());
-				return false;
-			}
+			if (!Plugin.GhostsBeingSpawned.Contains(Player.Get(__instance.gameObject))) return true;
+			Plugin.Log.Debug("Caught the PlayerSpawnEvent.");
+			Plugin.GhostsBeingSpawned.Remove(Player.Get(__instance.gameObject));
+			return false;
 
-			return true;
 		}
 	}
 }

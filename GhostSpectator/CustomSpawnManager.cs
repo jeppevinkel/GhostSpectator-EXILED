@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Exiled.API.Features;
 using Mirror;
 using UnityEngine;
 
@@ -10,14 +11,14 @@ namespace GhostSpectator
 {
 	public static class CustomSpawnManager
 	{
-        public static void SetClassCustomSpawn(this ReferenceHub rh, RoleType role, Vector3 pos, float rotY = 0, bool lite = false)
+        public static void SetClassCustomSpawn(this Player ply, RoleType role, Vector3 pos, float rotY = 0, bool lite = false)
         {
-            rh.characterClassManager.NetworkCurClass = role;
-            rh.playerStats.MakeHpDirty();
-            rh.playerStats.unsyncedArtificialHealth = 0.0f;
-            rh.characterClassManager.AliveTime = 0.0f;
+            ply.ReferenceHub.characterClassManager.NetworkCurClass = role;
+            ply.ReferenceHub.playerStats.MakeHpDirty();
+            ply.ReferenceHub.playerStats.unsyncedArtificialHealth = 0.0f;
+            ply.ReferenceHub.characterClassManager.AliveTime = 0.0f;
 
-            rh.ApplyPropertiesCustom(pos, rotY, lite);
+            ply.ReferenceHub.ApplyPropertiesCustom(pos, rotY, lite);
         }
 
         public static void ApplyPropertiesCustom(this ReferenceHub rh, Vector3 pos, float rotY, bool lite = false)
@@ -69,9 +70,7 @@ namespace GhostSpectator
                 if (!rh.characterClassManager.isLocalPlayer)
                     rh.characterClassManager.GetComponent<PlayerStats>().maxHP = role.maxHP;
             }
-            rh.characterClassManager.Scp049.iAm049 = rh.characterClassManager.CurClass == RoleType.Scp049;
             rh.characterClassManager.Scp0492.iAm049_2 = rh.characterClassManager.CurClass == RoleType.Scp0492;
-            rh.characterClassManager.Scp096.iAm096 = rh.characterClassManager.CurClass == RoleType.Scp096;
             rh.characterClassManager.Scp106.iAm106 = rh.characterClassManager.CurClass == RoleType.Scp106;
             rh.characterClassManager.Scp173.iAm173 = rh.characterClassManager.CurClass == RoleType.Scp173;
             rh.characterClassManager.Scp939.iAm939 = rh.characterClassManager.CurClass.Is939();

@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EXILED.Extensions;
-using GhostSpectator.Localization;
-using Harmony;
+using Exiled.API.Features;
+using HarmonyLib;
 using UnityEngine;
 
 namespace GhostSpectator.Patches
@@ -15,19 +10,19 @@ namespace GhostSpectator.Patches
     [HarmonyPatch(new Type[]
     {
         typeof(GameObject),
-        typeof(string)
+        typeof(PlayerInteract.Generator079Operations)
     })]
     class Generator079InteractPatch
     {
         [HarmonyPriority(Priority.First)]
-        public static bool Prefix(Generator079 __instance, GameObject person, string command)
+        public static bool Prefix(Generator079 __instance, GameObject person, PlayerInteract.Generator079Operations command)
         {
             Plugin.Log.Debug("Generator079InteractPatch");
-            if (!Plugin.GhostList.Contains(person.GetComponent<ReferenceHub>())) return true;
-            ReferenceHub rh = person.GetComponent<ReferenceHub>();
+            Player ply = Player.Get(__instance.gameObject);
+            if (!Plugin.GhostList.Contains(ply)) return true;
 
-            rh.ClearBroadcasts();
-            rh.Broadcast(3, Translation.GetText().generatorDenied);
+            ply.ClearBroadcasts();
+            ply.Broadcast(3, Translation.Translation.GetText().GeneratorDenied);
 
             return false;
         }

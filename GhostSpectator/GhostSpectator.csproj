@@ -33,58 +33,73 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony">
-      <HintPath>..\..\EXILED-References\0Harmony.dll</HintPath>
+    <Reference Include="0Harmony, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\EXILED2-References\EXILED\Plugins\dependencies\0Harmony.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\..\EXILED-References\Assembly-CSharp-firstpass.dll</HintPath>
+    <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\EXILED2-References\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp_publicized">
-      <HintPath>..\..\EXILED-References\Assembly-CSharp_publicized.dll</HintPath>
+    <Reference Include="Assembly-CSharp-Publicized">
+      <HintPath>..\..\EXILED2-References\Assembly-CSharp-Publicized.dll</HintPath>
     </Reference>
-    <Reference Include="EXILED">
-      <HintPath>..\..\EXILED-References\EXILED.dll</HintPath>
+    <Reference Include="CommandSystem.Core">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\CommandSystem.Core.dll</HintPath>
     </Reference>
-    <Reference Include="EXILED_Events">
-      <HintPath>..\..\EXILED-References\EXILED_Events.dll</HintPath>
+    <Reference Include="Exiled.API">
+      <HintPath>..\..\EXILED2-References\EXILED\Plugins\dependencies\Exiled.API.dll</HintPath>
     </Reference>
-    <Reference Include="EXILED_Idler">
-      <HintPath>..\..\EXILED-References\EXILED_Idler.dll</HintPath>
+    <Reference Include="Exiled.Events">
+      <HintPath>..\..\EXILED2-References\EXILED\Plugins\Exiled.Events.dll</HintPath>
     </Reference>
-    <Reference Include="EXILED_Permissions">
-      <HintPath>..\..\EXILED-References\EXILED_Permissions.dll</HintPath>
+    <Reference Include="Exiled.Loader">
+      <HintPath>..\..\EXILED2-References\EXILED\Exiled.Loader.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.Permissions">
+      <HintPath>..\..\EXILED2-References\EXILED\Plugins\Exiled.Permissions.dll</HintPath>
+    </Reference>
+    <Reference Include="ExLocalization">
+      <HintPath>..\..\ExLocalization\ExLocalization\bin\Debug\ExLocalization.dll</HintPath>
     </Reference>
     <Reference Include="Logger, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Logger-EXILED\Logger\bin\Release\netstandard2.0\Logger.dll</HintPath>
     </Reference>
-    <Reference Include="Mirror">
-      <HintPath>..\..\EXILED-References\Mirror.dll</HintPath>
+    <Reference Include="Mirror, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\Mirror.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="NorthwoodLib">
+      <HintPath>..\..\NorthwoodLib\NorthwoodLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine">
-      <HintPath>..\..\EXILED-References\UnityEngine.dll</HintPath>
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\EXILED-References\UnityEngine.CoreModule.dll</HintPath>
+    <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
-    <Reference Include="YamlDotNet">
-      <HintPath>..\..\EXILED-References\YamlDotNet.dll</HintPath>
+    <Reference Include="YamlDotNet, Version=8.0.0.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\EXILED2-References\EXILED\Plugins\dependencies\YamlDotNet.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandHandler.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="CustomSpawnManager.cs" />
     <Compile Include="EventHandlers.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="GhostSettings.cs" />
+    <Compile Include="Handlers\Player.cs" />
+    <Compile Include="Handlers\Scp914.cs" />
+    <Compile Include="Handlers\Server.cs" />
     <Compile Include="Patches\Change914KnobPatch.cs" />
     <Compile Include="Patches\Contain106Patch.cs" />
     <Compile Include="Patches\DetonateWarheadPatch.cs" />
@@ -92,6 +107,7 @@
     <Compile Include="Patches\GetTeamPatch.cs" />
     <Compile Include="Patches\MTFRespawnUpdatePatch.cs" />
     <Compile Include="Patches\PlayerEffectPatch.cs" />
+    <Compile Include="Patches\RespawningTeamPatch.cs" />
     <Compile Include="Patches\SetClassEventPatch.cs" />
     <Compile Include="Patches\PlayerSpawnEventPatch.cs" />
     <Compile Include="Patches\ProcessLookingPatch.cs" />
@@ -111,6 +127,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
          Other similar extension points exist, see Microsoft.Common.targets.

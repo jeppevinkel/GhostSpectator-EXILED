@@ -1,0 +1,506 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NorthwoodLib</name>
+    </assembly>
+    <members>
+        <member name="T:NorthwoodLib.ActionDispatcher">
+            <summary>
+            Queues <see cref="T:System.Action"/> and runs them on <see cref="M:NorthwoodLib.ActionDispatcher.Invoke"/>
+            </summary>
+        </member>
+        <member name="M:NorthwoodLib.ActionDispatcher.Dispatch(System.Action)">
+            <summary>
+            Queues an <see cref="T:System.Action"/>
+            </summary>
+            <param name="action">Queued <see cref="T:System.Action"/></param>
+        </member>
+        <member name="M:NorthwoodLib.ActionDispatcher.Invoke">
+            <summary>
+            Runs all scheduled <see cref="T:System.Action"/>
+            </summary>
+        </member>
+        <member name="T:NorthwoodLib.Logging.LogType">
+            <summary>
+            Specified the log message type
+            </summary>
+        </member>
+        <member name="F:NorthwoodLib.Logging.LogType.Debug">
+            <summary>
+            Debugging logs
+            </summary>
+        </member>
+        <member name="F:NorthwoodLib.Logging.LogType.Info">
+            <summary>
+            Informational logs
+            </summary>
+        </member>
+        <member name="F:NorthwoodLib.Logging.LogType.Warning">
+            <summary>
+            Warning logs
+            </summary>
+        </member>
+        <member name="F:NorthwoodLib.Logging.LogType.Error">
+            <summary>
+            Error logs
+            </summary>
+        </member>
+        <member name="T:NorthwoodLib.NativeMemory">
+            <summary>
+            Stores a reference to unmanaged memory allocated with <see cref="M:System.Runtime.InteropServices.Marshal.AllocCoTaskMem(System.Int32)"/> and prevents it from leaking
+            </summary>
+        </member>
+        <member name="F:NorthwoodLib.NativeMemory.Data">
+            <summary>
+            Pointer to allocated memory
+            </summary>
+        </member>
+        <member name="F:NorthwoodLib.NativeMemory.Length">
+            <summary>
+            Allocated memory length
+            </summary>
+        </member>
+        <member name="M:NorthwoodLib.NativeMemory.#ctor(System.Int32)">
+            <summary>
+            Creates a <see cref="T:NorthwoodLib.NativeMemory"/> with requested size
+            </summary>
+            <param name="size">Allocation size</param>
+        </member>
+        <member name="M:NorthwoodLib.NativeMemory.ToPointer``1">
+            <summary>
+            Converts the <see cref="T:System.IntPtr"/> to specified pointer type
+            </summary>
+            <typeparam name="T">Pointer type</typeparam>
+            <returns>Pointer to allocated memory</returns>
+        </member>
+        <member name="M:NorthwoodLib.NativeMemory.Dispose">
+            <summary>
+            Frees allocated memory
+            </summary>
+        </member>
+        <member name="M:NorthwoodLib.NativeMemory.Finalize">
+            <summary>
+            Frees allocated memory
+            </summary>
+        </member>
+        <member name="T:NorthwoodLib.OperatingSystem">
+            <summary>
+            Provides data about currently used Operating System
+            </summary>
+        </member>
+        <member name="T:NorthwoodLib.OperatingSystem.OSVERSIONINFO">
+            <summary>
+            Managed version of <see href="https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_osversioninfoexw"/>
+            </summary>
+        </member>
+        <member name="F:NorthwoodLib.OperatingSystem.OSVERSIONINFO.dwOSVersionInfoSize">
+            <summary>
+            The marshalled size, in bytes, of an <see cref="T:NorthwoodLib.OperatingSystem.OSVERSIONINFO"/> structure. This member must be set to <see cref="M:System.Runtime.InteropServices.Marshal.SizeOf``1"/> before the structure is used with <see cref="M:NorthwoodLib.OperatingSystem.GetVersion(NorthwoodLib.OperatingSystem.OSVERSIONINFO@)"/>.
+            </summary>
+        </member>
+        <member name="F:NorthwoodLib.OperatingSystem.OSVERSIONINFO.dwMajorVersion">
+            <summary>
+            The major version number of the operating system.
+            </summary>
+        </member>
+        <member name="F:NorthwoodLib.OperatingSystem.OSVERSIONINFO.dwMinorVersion">
+            <summary>
+            The minor version number of the operating system.
+            </summary>
+        </member>
+        <member name="F:NorthwoodLib.OperatingSystem.OSVERSIONINFO.dwBuildNumber">
+            <summary>
+            The build number of the operating system.
+            </summary>
+        </member>
+        <member name="F:NorthwoodLib.OperatingSystem.OSVERSIONINFO.dwPlatformId">
+            <summary>
+            The operating system platform. For Win32 on NT-based operating systems, RtlGetVersion returns the value VER_PLATFORM_WIN32_NT.
+            </summary>
+        </member>
+        <member name="F:NorthwoodLib.OperatingSystem.OSVERSIONINFO.szCSDVersion">
+            <summary>
+            The service-pack version string.
+            </summary>
+        </member>
+        <member name="F:NorthwoodLib.OperatingSystem.OSVERSIONINFO.wServicePackMajor">
+            <summary>
+            The major version number of the latest service pack installed on the system.
+            </summary>
+        </member>
+        <member name="F:NorthwoodLib.OperatingSystem.OSVERSIONINFO.wServicePackMinor">
+            <summary>
+            The minor version number of the latest service pack installed on the system.
+            </summary>
+        </member>
+        <member name="F:NorthwoodLib.OperatingSystem.OSVERSIONINFO.wSuiteMask">
+            <summary>
+            The product suites available on the system.
+            </summary>
+        </member>
+        <member name="F:NorthwoodLib.OperatingSystem.OSVERSIONINFO.wProductType">
+            <summary>
+            The product type.
+            </summary>
+        </member>
+        <member name="F:NorthwoodLib.OperatingSystem.OSVERSIONINFO.wReserved">
+            <summary>
+            Reserved for future use.
+            </summary>
+        </member>
+        <member name="M:NorthwoodLib.OperatingSystem.GetVersion(NorthwoodLib.OperatingSystem.OSVERSIONINFO@)">
+            <summary>
+            Returns version information about the currently running operating system. <see href="https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nf-wdm-rtlgetversion"/>
+            </summary>
+            <param name="lpVersionInformation"><see cref="T:NorthwoodLib.OperatingSystem.OSVERSIONINFO"/> that contains the version information about the currently running operating system.</param>
+            <returns><see cref="M:NorthwoodLib.OperatingSystem.GetVersion(NorthwoodLib.OperatingSystem.OSVERSIONINFO@)"/> returns STATUS_SUCCESS.</returns>
+        </member>
+        <member name="M:NorthwoodLib.OperatingSystem.NtStatusToDosCode(System.UInt32)">
+            <summary>
+            Converts the specified NTSTATUS code to its equivalent system error code. <see href="https://docs.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-rtlntstatustodoserror"/>
+            </summary>
+            <param name="Status">The NTSTATUS code to be converted.</param>
+            <returns>Corresponding system error code.</returns>
+        </member>
+        <member name="M:NorthwoodLib.OperatingSystem.GetSystemMetrics(System.Int32)">
+            <summary>
+            Retrieves the specified system metric or system configuration setting. <see href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetrics"/>
+            </summary>
+            <param name="nIndex">The system metric or configuration setting to be retrieved.</param>
+            <returns>Requested system metric or configuration setting.</returns>
+        </member>
+        <member name="M:NorthwoodLib.OperatingSystem.GetProductInfo(System.UInt32,System.UInt32,System.UInt32,System.UInt32,System.UInt32@)">
+            <summary>
+            Retrieves the product type for the operating system on the local computer, and maps the type to the product types supported by the specified operating system. <see href="https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getproductinfo"/>
+            </summary>
+            <param name="idwOSMajorVersiond">The major version number of the operating system.</param>
+            <param name="dwOSMinorVersion">The minor version number of the operating system.</param>
+            <param name="dwSpMajorVersion">The major version number of the operating system service pack.</param>
+            <param name="dwSpMinorVersion">The minor version number of the operating system service pack.</param>
+            <param name="pdwReturnedProductType">The product type.</param>
+            <returns>A nonzero value on success. This function fails if one of the input parameters is invalid.</returns>
+        </member>
+        <member name="F:NorthwoodLib.OperatingSystem.UsesNativeData">
+            <summary>
+            Informs if code uses P/Invokes to obtain the data
+            </summary>
+        </member>
+        <member name="F:NorthwoodLib.OperatingSystem.UsesWine">
+            <summary>
+            Informs if user uses Wine. User can hide Wine so don't rely on this for uses other than diagnostic usage
+            </summary>
+        </member>
+        <member name="F:NorthwoodLib.OperatingSystem.Version">
+            <summary>
+            Used Operating System <see cref="T:System.Version"/>
+            </summary>
+        </member>
+        <member name="F:NorthwoodLib.OperatingSystem.VersionString">
+            <summary>
+            Returns human readable description of the used Used Operating System
+            </summary>
+        </member>
+        <member name="M:NorthwoodLib.OperatingSystem.TryGetOsRelease(System.String@)">
+            <summary>
+            Checks /etc/os-release for Linux distribution info
+            </summary>
+            <param name="os">Used Linux distribution</param>
+            <returns>True if operation was successful</returns>
+        </member>
+        <member name="M:NorthwoodLib.OperatingSystem.CheckTrueVersion(NorthwoodLib.OperatingSystem.OSVERSIONINFO@)">
+            <summary>
+            Makes sure the OS doesn't lie that it's Windows 8.
+            </summary>
+            <param name="version">Checked version</param>
+        </member>
+        <member name="T:NorthwoodLib.PlatformSettings">
+            <summary>
+            Stores static data provided by the software using the library
+            </summary>
+        </member>
+        <member name="F:NorthwoodLib.PlatformSettings.VersionConst">
+            <summary>
+            Current library version
+            </summary>
+        </member>
+        <member name="P:NorthwoodLib.PlatformSettings.Version">
+            <summary>
+            Returns the library version
+            </summary>
+        </member>
+        <member name="E:NorthwoodLib.PlatformSettings.Logged">
+            <summary>
+            Logs all messages from the code
+            </summary>
+        </member>
+        <member name="M:NorthwoodLib.PlatformSettings.Log(System.String,NorthwoodLib.Logging.LogType)">
+            <summary>
+            Fires <see cref="E:NorthwoodLib.PlatformSettings.Logged"/> with provided data
+            </summary>
+            <param name="message">Message text</param>
+            <param name="type">Message type</param>
+        </member>
+        <member name="T:NorthwoodLib.Pools.HashSetPool`1">
+            <summary>
+            Returns pooled <see cref="T:System.Collections.Generic.HashSet`1"/>
+            </summary>
+            <typeparam name="T">Element type</typeparam>
+        </member>
+        <member name="F:NorthwoodLib.Pools.HashSetPool`1.Shared">
+            <summary>
+            Gets a shared <see cref="T:NorthwoodLib.Pools.HashSetPool`1"/> instance
+            </summary>
+        </member>
+        <member name="M:NorthwoodLib.Pools.HashSetPool`1.Rent">
+            <summary>
+            Gives a pooled <see cref="T:System.Collections.Generic.HashSet`1"/>
+            </summary>
+            <returns><see cref="T:System.Collections.Generic.HashSet`1"/> from the pool</returns>
+        </member>
+        <member name="M:NorthwoodLib.Pools.HashSetPool`1.Rent(System.Int32)">
+            <summary>
+            Gives a pooled <see cref="T:System.Collections.Generic.HashSet`1"/> with provided capacity
+            </summary>
+            <param name="capacity">Requested capacity</param>
+            <returns><see cref="T:System.Collections.Generic.HashSet`1"/> from the pool</returns>
+        </member>
+        <member name="M:NorthwoodLib.Pools.HashSetPool`1.Rent(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Gives a pooled <see cref="T:System.Collections.Generic.HashSet`1"/> with initial content
+            </summary>
+            <param name="enumerable">Initial content</param>
+            <returns><see cref="T:System.Collections.Generic.HashSet`1"/> from the pool</returns>
+        </member>
+        <member name="M:NorthwoodLib.Pools.HashSetPool`1.Return(System.Collections.Generic.HashSet{`0})">
+            <summary>
+            Returns a <see cref="T:System.Collections.Generic.HashSet`1"/> to the pool
+            </summary>
+            <param name="set">Returned <see cref="T:System.Collections.Generic.HashSet`1"/></param>
+        </member>
+        <member name="T:NorthwoodLib.Pools.IPool`1">
+            <summary>
+            Provides pooled instances of requested type
+            </summary>
+            <typeparam name="T">Pooled type</typeparam>
+        </member>
+        <member name="M:NorthwoodLib.Pools.IPool`1.Rent">
+            <summary>
+            Returns a pooled instance of <typeparamref name="T"/>
+            </summary>
+            <returns><typeparamref name="T"/> from the pool</returns>
+        </member>
+        <member name="M:NorthwoodLib.Pools.IPool`1.Return(`0)">
+            <summary>
+            Returns a <typeparamref name="T"/> to the pool
+            </summary>
+            <param name="obj">Pooled object</param>
+        </member>
+        <member name="T:NorthwoodLib.Pools.ListPool`1">
+            <summary>
+            Returns pooled <see cref="T:System.Collections.Generic.List`1"/>
+            </summary>
+            <typeparam name="T">Element type</typeparam>
+        </member>
+        <member name="F:NorthwoodLib.Pools.ListPool`1.Shared">
+            <summary>
+            Gets a shared <see cref="T:NorthwoodLib.Pools.ListPool`1"/> instance
+            </summary>
+        </member>
+        <member name="M:NorthwoodLib.Pools.ListPool`1.Rent">
+            <summary>
+            Gives a pooled <see cref="T:System.Collections.Generic.List`1"/>
+            </summary>
+            <returns><see cref="T:System.Collections.Generic.List`1"/> from the pool</returns>
+        </member>
+        <member name="M:NorthwoodLib.Pools.ListPool`1.Rent(System.Int32)">
+            <summary>
+            Gives a pooled <see cref="T:System.Collections.Generic.List`1"/> with provided capacity
+            </summary>
+            <param name="capacity">Requested capacity</param>
+            <returns><see cref="T:System.Collections.Generic.List`1"/> from the pool</returns>
+        </member>
+        <member name="M:NorthwoodLib.Pools.ListPool`1.Rent(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Gives a pooled <see cref="T:System.Collections.Generic.List`1"/> with initial content
+            </summary>
+            <param name="enumerable">Initial content</param>
+            <returns><see cref="T:System.Collections.Generic.List`1"/> from the pool</returns>
+        </member>
+        <member name="M:NorthwoodLib.Pools.ListPool`1.Return(System.Collections.Generic.List{`0})">
+            <summary>
+            Returns a <see cref="T:System.Collections.Generic.List`1"/> to the pool
+            </summary>
+            <param name="list">Returned <see cref="T:System.Collections.Generic.List`1"/></param>
+        </member>
+        <member name="T:NorthwoodLib.Pools.StringBuilderPool">
+            <summary>
+            Returns pooled <see cref="T:System.Text.StringBuilder"/>
+            </summary>
+        </member>
+        <member name="F:NorthwoodLib.Pools.StringBuilderPool.Shared">
+            <summary>
+            Gets a shared <see cref="T:NorthwoodLib.Pools.StringBuilderPool"/> instance
+            </summary>
+        </member>
+        <member name="M:NorthwoodLib.Pools.StringBuilderPool.Rent">
+            <summary>
+            Gives a pooled <see cref="T:System.Text.StringBuilder"/>
+            </summary>
+            <returns><see cref="T:System.Text.StringBuilder"/> from the pool</returns>
+        </member>
+        <member name="M:NorthwoodLib.Pools.StringBuilderPool.Rent(System.Int32)">
+            <summary>
+            Gives a pooled <see cref="T:System.Text.StringBuilder"/> with provided capacity
+            </summary>
+            <param name="capacity">Requested capacity</param>
+            <returns><see cref="T:System.Text.StringBuilder"/> from the pool</returns>
+        </member>
+        <member name="M:NorthwoodLib.Pools.StringBuilderPool.Rent(System.String)">
+            <summary>
+            Gives a pooled <see cref="T:System.Text.StringBuilder"/> with initial content
+            </summary>
+            <param name="text">Initial content</param>
+            <returns><see cref="T:System.Text.StringBuilder"/> from the pool</returns>
+        </member>
+        <member name="M:NorthwoodLib.Pools.StringBuilderPool.Return(System.Text.StringBuilder)">
+            <summary>
+            Returns a <see cref="T:System.Text.StringBuilder"/> to the pool
+            </summary>
+            <param name="stringBuilder">Returned <see cref="T:System.Text.StringBuilder"/></param>
+        </member>
+        <member name="T:NorthwoodLib.StringUtils">
+            <summary>
+            Utility methods for <see cref="T:System.String"/>
+            </summary>
+        </member>
+        <member name="M:NorthwoodLib.StringUtils.TruncateToLast(System.String,System.Int32,System.Char)">
+            <summary>
+            Truncates a string to the last occurance of <see paramref="character"/> within <see paramref="maxSize"/> characters if it's longer than it
+            </summary>
+            <param name="text">Processed text</param>
+            <param name="maxSize">Maximum size</param>
+            <param name="character">Checked character</param>
+            <returns>Truncated <see paramref="text"/></returns>
+        </member>
+        <member name="M:NorthwoodLib.StringUtils.TruncateToLast(System.String,System.Int32,System.String,System.StringComparison)">
+            <summary>
+            Truncates a string to the last occurance of <see paramref="str"/> within <see paramref="maxSize"/> characters if it's longer than it
+            </summary>
+            <param name="text">Processed text</param>
+            <param name="maxSize">Maximum size</param>
+            <param name="str">Checked string</param>
+            <param name="comparison">String comparison</param>
+            <returns>Truncated <see paramref="text"/></returns>
+        </member>
+        <member name="M:NorthwoodLib.StringUtils.Base64Encode(System.String)">
+            <summary>
+            Converts a text to Base64 encoded UTF8
+            </summary>
+            <param name="plainText">Processed text</param>
+            <returns>Base64 encoded UTF8 of <see paramref="plainText"/></returns>
+        </member>
+        <member name="M:NorthwoodLib.StringUtils.Base64Decode(System.String)">
+            <summary>
+            Converts Base64 encoded UTF8 data to text
+            </summary>
+            <param name="base64EncodedData">Base64 encoded UTF8 data</param>
+            <returns>Converted text</returns>
+        </member>
+        <member name="M:NorthwoodLib.StringUtils.Contains(System.String,System.Char)">
+            <summary>
+            Returns a value indicating whether a specified character occurs within this string.
+            </summary>
+            <param name="s">Checked string</param>
+            <param name="value">The character to seek.</param>
+            <returns><see langword="true"/> if the value parameter occurs within this string; otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="M:NorthwoodLib.StringUtils.Contains(System.String,System.String,System.StringComparison)">
+            <summary>
+            Returns a value indicating whether a specified string occurs within this string, using the specified comparison rules.
+            </summary>
+            <param name="s">Checked string</param>
+            <param name="value">The string to seek.</param>
+            <param name="comparison">One of the enumeration values that specifies the rules to use in the comparison.</param>
+            <returns><see langword="true"/> if the <see paramref="value"/> occurs within this string, or if <see paramref="value"/> is the empty string (""); otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="M:NorthwoodLib.StringUtils.StripUnicodeCharacters(System.String,System.String)">
+            <summary>
+            Replaces Unicode characters in a string.
+            </summary>
+            <param name="input">Input string</param>
+            <param name="replacement">String to replace Unicode characters with</param>
+            <returns>Processed string</returns>
+        </member>
+        <member name="M:NorthwoodLib.StringUtils.RemoveSpecialCharacters(System.String)">
+            <summary>
+            Removes special characters from provided text
+            </summary>
+            <param name="str">Processed text</param>
+            <returns>Filtered text</returns>
+        </member>
+        <member name="M:NorthwoodLib.StringUtils.StripTag(System.String,System.String)">
+            <summary>
+            Removes a tag from a string
+            </summary>
+            <param name="input">Processed text</param>
+            <param name="tag">Removed tag</param>
+            <returns>Filtered text</returns>
+        </member>
+        <member name="M:NorthwoodLib.StringUtils.StripTags(System.String)">
+            <summary>
+            Removes tags from a string
+            </summary>
+            <param name="input">Processed text</param>
+            <returns>Filtered text</returns>
+        </member>
+        <member name="T:NorthwoodLib.WineInfo">
+            <summary>
+            Detects usage of <see href="https://www.winehq.org/">Wine</see> and informs about its version
+            </summary>
+        </member>
+        <member name="M:NorthwoodLib.WineInfo.GetWineVersion">
+            <summary>
+            Returns used Wine version <see href="https://wiki.winehq.org/Developer_FAQ#How_can_I_detect_Wine.3F"/>
+            </summary>
+            <returns>Used Wine version</returns>
+        </member>
+        <member name="M:NorthwoodLib.WineInfo.GetWineBuildId">
+            <summary>
+            Returns used Wine build <see href="https://source.winehq.org/git/wine.git/blob/HEAD:/include/wine/library.h"/>
+            </summary>
+            <returns>Used Wine build</returns>
+        </member>
+        <member name="M:NorthwoodLib.WineInfo.GetWinePatches">
+            <summary>
+            Returns used Wine Staging patches <see href="https://github.com/wine-staging/wine-staging/blob/master/patches/Staging/0003-loader-Add-commandline-option-patches-to-show-the-pa.patch"/>
+            </summary>
+            <returns>Used Wine Staging patches</returns>
+        </member>
+        <member name="M:NorthwoodLib.WineInfo.GetWineHostVersion(System.String@,System.String@)">
+            <summary>
+            Returns Wine host <see href="https://source.winehq.org/git/wine.git/blob/HEAD:/include/wine/library.h"/>
+            </summary>
+            <returns>Used Wine host</returns>
+        </member>
+        <member name="F:NorthwoodLib.WineInfo.UsesWine">
+            <summary>
+            Informs if user uses Wine. User can hide Wine so don't rely on this for uses other than diagnostic usage
+            </summary>
+        </member>
+        <member name="F:NorthwoodLib.WineInfo.WineVersion">
+            <summary>
+            Returns used Wine Version
+            </summary>
+        </member>
+        <member name="F:NorthwoodLib.WineInfo.WinePatches">
+            <summary>
+            Returns used Wine Staging patches
+            </summary>
+        </member>
+        <member name="F:NorthwoodLib.WineInfo.WineHost">
+            <summary>
+            Returns used Wine host
+            </summary>
+        </member>
+    </members>
+</doc>

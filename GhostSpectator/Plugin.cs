@@ -1,113 +1,94 @@
 using System;
-using System.Threading;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Resources;
-using EXILED;
-using Harmony;
-using Logger;
-using MEC;
-using GhostSpectator.Patches;
-using GhostSpectator.Localization;
-using Mirror;
-using RemoteAdmin;
-using UnityEngine;
+using Exiled.API.Features;
+using Exiled.Loader;
+using ExLocalization.Api;
+using GhostSpectator.Translation;
+using HarmonyLib;
+using Respawning;
+using PlayerEv = Exiled.Events.Handlers.Player;
+using ServerEv = Exiled.Events.Handlers.Server;
+using Scp914Ev = Exiled.Events.Handlers.Scp914;
 
 namespace GhostSpectator
 {
-    public class Plugin : EXILED.Plugin
+    public class Plugin : Plugin<Config>
     {
-        public EventHandlers EventHandlers;
-        public CommandHandler CommandHandler;
+        public static Plugin Instance { get; } = new Plugin();
+        private Plugin() { }
+
+	    private Handlers.Player _player;
+        private Handlers.Server _server;
+        private Handlers.Scp914 _scp914;
+
+        private CommandHandler _commandHandler;
+        private EventHandlers _eventHandler;
 
         public static Logger.Logger Log;
-        public static List<ReferenceHub> GhostList = new List<ReferenceHub>();
+        public static List<Player> GhostList = new List<Player>();
         public static readonly Dictionary<string, GhostSettings> GhostSettings = new Dictionary<string, GhostSettings>();
-        public static readonly List<ReferenceHub> GhostsBeingSpawned = new List<ReferenceHub>();
+        public static readonly List<Player> GhostsBeingSpawned = new List<Player>();
         public static RoleType GhostRole = RoleType.Tutorial;
 
-        public static HashSet<ReferenceHub> RateLimited = new HashSet<ReferenceHub>();
+        public static HashSet<Player> RateLimited = new HashSet<Player>();
 
-        public bool Enabled;
-        public bool AllowDamage;
-        public bool AllowPickup;
-        public bool DebugMode;
-        public string Lang;
-        public static bool GhostInteract;
-        public static string GhostMessage;
-        public static string SpecMessage;
-        public static bool GhostGod;
-        public static bool GhostRagdoll;
-        public static bool GhostNoclip;
-        public static bool GhostSpectatorVoiceChat;
-        public static GhostSettings.Specmode DefaultSpecMode;
-        public static float RateLimitTime;
-
-        private HarmonyInstance _instance;
+        private Harmony _instance;
         private static int _patchFixer;
 
-        public override void OnEnable()
+        public override void OnEnabled()
         {
+            base.OnEnabled();
+
+            foreach (KeyValuePair<string, Language> defaultLanguage in Translation.Translation.DefaultLanguages)
+            {
+	            this.RegisterTranslation(defaultLanguage.Value, defaultLanguage.Key);
+            }
+
+            Language t = this.LoadTranslation<Language>();
+
+            Exiled.API.Features.Log.Debug(t.ContainDenied);
+            Exiled.API.Features.Log.Debug(t.NotImplementedYet);
+            Exiled.API.Features.Log.Debug(t.IntercomDenied);
+
+            //Exiled.Events.Events.DisabledPatches.Add(new Tuple<Type, string>(typeof(RespawnManager), nameof(RespawnManager.Spawn)));
+            //Exiled.Events.Events.Instance.ReloadDisabledPatches();
+
             try
             {
-                ReloadConfig();
-                if (!Enabled)
-                {
-                    return;
-                }
-                Log = new Logger.Logger("GhostSpectator", DebugMode || Config.GetBool("exiled_debug"));
+                Log = new Logger.Logger("GhostSpectator", Loader.ShouldDebugBeShown);
 
-                Log.Info($"Attempting to set language to {Lang}.");
+                Log.Info($"Attempting to set language to {Config.Lang}.");
 
-                Translation.LoadTranslations();
+                Translation.Translation.LoadTranslations();
 
                 CultureInfo ci;
 
                 try
                 {
-                    ci = CultureInfo.GetCultureInfo(Lang);
+                    ci = CultureInfo.GetCultureInfo(Config.Lang);
                 }
                 catch (Exception e)
                 {
                     ci = CultureInfo.GetCultureInfo("en");
-                    Log.Error($"{Lang} is not a valid language. Defaulting to English.");
+                    Log.Error($"{Config.Lang} is not a valid language. Defaulting to English.");
                     Log.Error($"{e.Message}");
                 }
                 
                 CultureInfo.DefaultThreadCurrentCulture = ci;
                 CultureInfo.DefaultThreadCurrentUICulture = ci;
                 Log.Info($"Language set to {ci.DisplayName}.");
-                Log.Debug($"Language test {Translation.GetText().doorDenied}.");
+                Log.Debug($"Language test {Translation.Translation.GetText().DoorDenied}.");
 
-                Log.Debug("Initializing event handlers..");
-                EventHandlers = new EventHandlers(this);
-                CommandHandler = new CommandHandler(this);
-
-                Events.WaitingForPlayersEvent += EventHandlers.OnWaitingForPlayers;
-                Events.RoundEndEvent += EventHandlers.OnRoundEnd;
-                Events.DropItemEvent += EventHandlers.OnDropItem;
-                Events.PickupItemEvent += EventHandlers.OnPickupItem;
-                Events.PlayerHurtEvent += EventHandlers.OnPlayerHurt;
-                Events.TeamRespawnEvent += EventHandlers.OnTeamRespawn;
-                Events.PlayerDeathEvent += EventHandlers.OnPlayerDeath;
-                //Events.PlayerSpawnEvent += EventHandlers.OnPlayerSpawn;
-                Events.SetClassEvent += EventHandlers.OnSetClass;
-                Events.ItemChangedEvent += EventHandlers.OnItemChanged;
-                Events.PlayerJoinEvent += EventHandlers.OnPlayerJoin;
-                Events.Scp914UpgradeEvent += EventHandlers.OnScp914Upgrade;
-
-                Events.RemoteAdminCommandEvent += CommandHandler.OnRACommand;
-                Events.ConsoleCommandEvent += EventHandlers.OnConsoleCommand;
+                RegisterEvents();
 
                 Log.Debug("Patching...");
                 try
                 {
                     //You must use an incrementer for the harmony instance name, otherwise the new instance will fail to be created if the plugin is reloaded.
                     _patchFixer++;
-                    _instance = HarmonyInstance.Create($"ghostspectator.patches{_patchFixer}");
+                    _instance = new Harmony($"ghostspectator.patches{_patchFixer}");
                     _instance.PatchAll();
                 }
                 catch (Exception exception)
@@ -117,7 +98,7 @@ namespace GhostSpectator
 
                 //Timing.RunCoroutine(EventHandlers.SlowUpdate());
 
-                Log.Info($"{getName} loaded. c:");
+                Log.Info($"{Name} loaded. c:");
             }
             catch (Exception e)
             {
@@ -125,62 +106,82 @@ namespace GhostSpectator
             }
         }
 
-        public override void OnDisable()
+        public override void OnDisabled()
         {
-            Events.WaitingForPlayersEvent -= EventHandlers.OnWaitingForPlayers;
-            Events.RoundEndEvent -= EventHandlers.OnRoundEnd;
-            Events.DropItemEvent -= EventHandlers.OnDropItem;
-            Events.PickupItemEvent -= EventHandlers.OnPickupItem;
-            Events.PlayerHurtEvent -= EventHandlers.OnPlayerHurt;
-            Events.TeamRespawnEvent -= EventHandlers.OnTeamRespawn;
-            Events.PlayerDeathEvent -= EventHandlers.OnPlayerDeath;
-            //Events.PlayerSpawnEvent -= EventHandlers.OnPlayerSpawn;
-            Events.SetClassEvent -= EventHandlers.OnSetClass;
-            Events.ItemChangedEvent -= EventHandlers.OnItemChanged;
-            Events.PlayerJoinEvent -= EventHandlers.OnPlayerJoin;
-            Events.Scp914UpgradeEvent -= EventHandlers.OnScp914Upgrade;
+            base.OnDisabled();
 
-            Events.RemoteAdminCommandEvent -= CommandHandler.OnRACommand;
-            Events.ConsoleCommandEvent -= EventHandlers.OnConsoleCommand;
-
-            EventHandlers = null;
+            UnregisterEvents();
 
             Log.Debug("Unpatching...");
             _instance.UnpatchAll();
             Log.Debug("Unpatching complete. Goodbye.");
         }
 
-        public void ReloadConfig()
+        private void RegisterEvents()
         {
-            Enabled = Config.GetBool("gs_enable", true);
-            AllowDamage = Config.GetBool("gs_allow_damage", false);
-            AllowPickup = Config.GetBool("gs_allow_pickup", false);
-            DebugMode = Config.GetBool("gs_debug", false);
-            GhostGod = Config.GetBool("gs_god_mode", true);
-            GhostInteract = Config.GetBool("gs_interact", false);
-            GhostRagdoll = Config.GetBool("gs_ragdoll", false);
-            GhostNoclip = Config.GetBool("gs_noclip", true);
-            GhostSpectatorVoiceChat = Config.GetBool("gs_global_voice", false);
-            if (!Enum.TryParse(Config.GetString("gs_default_mode", "Normal"), true,
-	            out DefaultSpecMode)) DefaultSpecMode = GhostSpectator.GhostSettings.Specmode.Normal;
-            GhostMessage = Config.GetString("gs_ghost_message",
-                "You have been spawned as a spectator ghost.\n" +
-                "Drop your <color=#ff0000>7.62</color> to be <color=#ff0000>teleported</color> to the <color=#ff0000>next</color> player\n" +
-                "Drop your <color=#ff0000>5.56</color> to be <color=#ff0000>teleported</color> to the <color=#ff0000>previous</color> player");
-            SpecMessage = Config.GetString("gs_spec_message",
-                "This server is using <color=#ff0000>GhostSpectator</color>\n" +
-                "To enable ghost mode, open your console and type <color=#ff0000>.specmode</color>");
-            Lang = Config.GetString("gs_language",
-                "en-US").Replace("\"", "");
-            RateLimitTime = Config.GetFloat("gz_rate_limit_time", 3);
+	        Log.Debug("Initializing event handlers..");
+
+	        _player = new Handlers.Player();
+	        _server = new Handlers.Server();
+            _scp914 = new Handlers.Scp914();
+
+            _commandHandler = new CommandHandler();
+            _eventHandler = new EventHandlers();
+
+            PlayerEv.DroppingItem += _player.OnDroppingItem;
+	        PlayerEv.PickingUpItem += _player.OnPickingUpItem;
+	        PlayerEv.Hurting += _player.OnHurting;
+	        PlayerEv.Died += _player.OnDied;
+	        PlayerEv.ChangingRole += _player.OnChangingRole;
+	        PlayerEv.ChangingItem += _player.OnChangingItem;
+	        PlayerEv.Joined += _player.OnJoined;
+	        PlayerEv.Interacted += _player.OnInteracted;
+	        PlayerEv.InteractingDoor += _player.OnInteractingDoor;
+	        PlayerEv.InteractingElevator += _player.OnInteractingElevator;
+	        PlayerEv.InteractingLocker += _player.OnInteractingLocker;
+	        PlayerEv.IntercomSpeaking += _player.OnIntercomSpeaking;
+
+
+	        ServerEv.WaitingForPlayers += _server.OnWaitingForPlayers;
+	        ServerEv.RestartingRound += _server.OnRestartingRound;
+	        ServerEv.RespawningTeam += _server.OnRespawningTeam;
+
+	        ServerEv.SendingRemoteAdminCommand += _commandHandler.OnRACommand;
+            ServerEv.SendingConsoleCommand += _eventHandler.OnConsoleCommand;
+
+            Scp914Ev.UpgradingItems += _scp914.OnUpgradingItems;
         }
 
-        public override void OnReload()
+        private void UnregisterEvents()
+        {
+	        PlayerEv.DroppingItem -= _player.OnDroppingItem;
+	        PlayerEv.PickingUpItem -= _player.OnPickingUpItem;
+	        PlayerEv.Hurting -= _player.OnHurting;
+	        PlayerEv.Died -= _player.OnDied;
+	        PlayerEv.ChangingRole -= _player.OnChangingRole;
+	        PlayerEv.ChangingItem -= _player.OnChangingItem;
+	        PlayerEv.Joined -= _player.OnJoined;
+
+	        ServerEv.WaitingForPlayers -= _server.OnWaitingForPlayers;
+	        ServerEv.RestartingRound -= _server.OnRestartingRound;
+	        ServerEv.RespawningTeam -= _server.OnRespawningTeam;
+
+	        ServerEv.SendingRemoteAdminCommand -= _commandHandler.OnRACommand;
+            ServerEv.SendingConsoleCommand -= _eventHandler.OnConsoleCommand;
+
+            Scp914Ev.UpgradingItems -= _scp914.OnUpgradingItems;
+
+	        _player = null;
+	        _server = null;
+	        _scp914 = null;
+
+	        _commandHandler = null;
+	        _eventHandler = null;
+        }
+
+        public override void OnReloaded()
         {
             //This is only fired when you use the EXILED reload command, the reload command will call OnDisable, OnReload, reload the plugin, then OnEnable in that order. There is no GAC bypass, so if you are updating a plugin, it must have a unique assembly name, and you need to remove the old version from the plugins folder
         }
-
-        public static string GetName { get; } = "GhostSpectator";
-        public override string getName { get; } = GetName;
     }
 }

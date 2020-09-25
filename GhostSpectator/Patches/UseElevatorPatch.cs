@@ -1,28 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EXILED.Extensions;
-using GhostSpectator.Localization;
-using Harmony;
+using Exiled.API.Features;
+using HarmonyLib;
 using UnityEngine;
 
 namespace GhostSpectator.Patches
 {
     [HarmonyPatch(typeof(PlayerInteract))]
     [HarmonyPatch(nameof(PlayerInteract.CallCmdUseElevator))]
-    [HarmonyPatch(new Type[] { typeof(GameObject) })]
-    class UseElevatorPatch
+    [HarmonyPatch(new[] { typeof(GameObject) })]
+    internal class UseElevatorPatch
     {
         [HarmonyPriority(Priority.First)]
         public static bool Prefix(PlayerInteract __instance, GameObject elevator)
         {
             Plugin.Log.Debug("UseElevatorPatch");
-            if (!Plugin.GhostList.Contains(__instance.GetComponent<ReferenceHub>())) return true;
-            ReferenceHub rh = __instance.GetComponent<ReferenceHub>();
+            Player ply = Player.Get(__instance.gameObject);
+            if (!Plugin.GhostList.Contains(ply)) return true;
 
-            Lift lift = elevator.GetComponent<Lift>();
+            var lift = elevator.GetComponent<Lift>();
             Lift.Elevator[] elevators = lift.elevators;
 
             float furthestDistance = -1;
@@ -30,18 +25,16 @@ namespace GhostSpectator.Patches
 
             foreach (Lift.Elevator Object in elevators)
             {
-                float objectDistance = Vector3.Distance(rh.transform.position, Object.target.position);
-                if (objectDistance > furthestDistance)
-                {
-                    furthestObject = Object.target;
-                    furthestDistance = objectDistance;
-                }
+                float objectDistance = Vector3.Distance(ply.Position, Object.target.position);
+                if (!(objectDistance > furthestDistance)) continue;
+                furthestObject = Object.target;
+                furthestDistance = objectDistance;
             }
 
-            if (furthestObject != null) rh.SetPosition(furthestObject.position + furthestObject.right * 4.5f);
+            if (furthestObject != null) ply.Position = (furthestObject.position + furthestObject.right * 4.5f);
 
-            rh.ClearBroadcasts();
-            rh.Broadcast(3, Translation.GetText().elevatorTeleport);
+            ply.ClearBroadcasts();
+            ply.Broadcast(3, Translation.Translation.GetText().ElevatorTeleport);
 
             return false;
         }

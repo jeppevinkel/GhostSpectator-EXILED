@@ -1,223 +1,126 @@
 using System.Collections.Generic;
-using System.Linq;
-using EXILED;
-using Grenades;
+using Exiled.API.Features;
+using Exiled.Events.EventArgs;
 using MEC;
-using EXILED.Extensions;
-using System;
-using GhostSpectator.Localization;
-using Mirror;
-using UnityEngine;
+using static GhostSpectator.Plugin;
 
 namespace GhostSpectator
 {
 	public class EventHandlers
 	{
-		public Plugin Plugin;
-		public EventHandlers(Plugin plugin) => this.Plugin = plugin;
-
-        public void OnWaitingForPlayers()
+		public void OnConsoleCommand(SendingConsoleCommandEventArgs ev)
         {
-            Plugin.GhostList.Clear();
-        }
-
-		public void OnRoundEnd()
-		{
-            Plugin.GhostList.Clear();
-        }
-
-		public void OnPlayerJoin(PlayerJoinEvent ev)
-		{
-			if (!Plugin.GhostSettings.ContainsKey(ev.Player.GetUserId()))
-			{
-				Plugin.GhostSettings.Add(ev.Player.GetUserId(), new GhostSettings());
-			}
-		}
-
-        public void OnPickupItem(ref PickupItemEvent ev)
-        {
-            if (Plugin.AllowPickup || !Plugin.GhostList.Contains(ev.Player)) return;
-            Plugin.Log.Debug($"Prevented {ev.Player.GetNickname()} from picking up item as ghost spectator.");
-            ev.Allow = false;
-        }
-
-        public void OnTeamRespawn(ref TeamRespawnEvent ev)
-        {
-            Plugin.Log.Debug($"Ghost spectators added to respawn list.");
-            ev.ToRespawn.AddRange(Plugin.GhostList);
-        }
-
-        public void OnPlayerDeath(ref PlayerDeathEvent ev)
-        {
-	        if (!Plugin.GhostSettings.ContainsKey(ev.Player.GetUserId()) ||
-	            Plugin.GhostSettings[ev.Player.GetUserId()].specmode != GhostSettings.Specmode.Ghost)
+	        Plugin.Log.Debug($"{ev.Player.Nickname} used the command: '{ev.Name}'");
+	        if (ev.Name.ToLower() == "specmode")
 	        {
-                if (!string.IsNullOrEmpty(Plugin.SpecMessage)) ev.Player.Broadcast(6, Plugin.SpecMessage);
-                return;
-	        }
+		        if (!Plugin.GhostSettings.ContainsKey(ev.Player.UserId)) Plugin.GhostSettings.Add(ev.Player.UserId, new GhostSettings());
 
-	        if (!Plugin.GhostList.Contains(ev.Player))
-	        {
-		        Plugin.Log.Debug($"{ev.Player.GetNickname()} added to list of ghost spectators.");
-		        Plugin.GhostList.Add(ev.Player);
-	        }
-	        Timing.RunCoroutine(SpawnGhost(ev.Player, 0.2f));
-        }
-
-        public void OnSetClass(SetClassEvent ev)
-        {
-	        Plugin.Log.Debug("SetClassEvent");
-
-	        if (Plugin.GhostList.Contains(ev.Player))
-	        {
-		        Plugin.Log.Debug($"{ev.Player.GetNickname()} removed from list of ghost spectators.");
-		        Plugin.GhostList.Remove(ev.Player);
-		        ev.Player.SetGhostMode(false);
-	        }
-
-	        if (!string.IsNullOrEmpty(ev.Player.GetUserId()) && Plugin.GhostSettings.ContainsKey(ev.Player.GetUserId()) && Plugin.GhostSettings[ev.Player.GetUserId()].specmode == GhostSettings.Specmode.Ghost && ev.Player.GetRole() == RoleType.Spectator)
-	        {
-		        Plugin.Log.Debug($"{ev.Player.GetNickname()} added to list of ghost spectators.");
-		        Plugin.GhostList.Add(ev.Player);
-		        Timing.RunCoroutine(SpawnGhost(ev.Player, 0.2f));
-			}
-		}
-
-        public void OnPlayerHurt(ref PlayerHurtEvent ev)
-        {
-	        if (Plugin.GhostList.Contains(ev.Player) && Plugin.GhostGod)
-	        {
-		        ev.Amount = 0;
-	        }
-
-            if (!Plugin.GhostList.Contains(ev.Attacker) || Plugin.AllowDamage) return;
-            Plugin.Log.Debug($"Prevented {ev.Attacker.GetNickname()} from doing harm as ghost spectator.");
-            ev.Amount = 0;
-        }
-
-		internal void OnScp914Upgrade(ref SCP914UpgradeEvent ev)
-		{
-			foreach (ReferenceHub hub in Plugin.GhostList)
-			{
-				if (ev.Players.Contains(hub))
-				{
-					Timing.CallDelayed(0.2f, () =>
-					{
-						hub.ClearInventory();
-						hub.AddItem(ItemType.Ammo762);
-						hub.AddItem(ItemType.Ammo556);
-						hub.AddItem(ItemType.Ammo9mm);
-						hub.AddItem(ItemType.Flashlight);
-					});
-				}
-			}
-		}
-
-		public void OnItemChanged(ItemChangedEvent ev)
-        {
-            if (!ev.Player.UseGhostItem(ev.NewItem.id))
-            {
-                ev.Player.inventory.curItem = ItemType.Coin;
-            }
-        }
-
-        public void OnDropItem(ref DropItemEvent ev)
-        {
-            ev.Allow = ev.Player.UseGhostItem(ev.Item.id);
-        }
-
-        public void OnConsoleCommand(ConsoleCommandEvent ev)
-        {
-	        Log.Debug($"{ev.Player.GetNickname()} used the command: '{ev.Command}'");
-	        if (ev.Command.ToLower() == "specmode")
-	        {
-		        if (!Plugin.GhostSettings.ContainsKey(ev.Player.GetUserId())) Plugin.GhostSettings.Add(ev.Player.GetUserId(), new GhostSettings());
-
-		        if (Plugin.RateLimited.Contains(ev.Player))
+		        if (RateLimited.Contains(ev.Player))
 		        {
 					ev.Player.ClearBroadcasts();
-					ev.Player.Broadcast(1, Translation.GetText().rateLimited);
-					ev.ReturnMessage = Translation.GetText().rateLimited;
+					ev.Player.Broadcast(1, Translation.Translation.GetText().RateLimited);
+					ev.ReturnMessage = Translation.Translation.GetText().RateLimited;
 					ev.Color = "red";
 					return;
 		        }
 
-		        Plugin.RateLimited.Add(ev.Player);
-		        Timing.CallDelayed(Plugin.RateLimitTime, () => Plugin.RateLimited.Remove(ev.Player));
+		        RateLimited.Add(ev.Player);
+		        Timing.CallDelayed(Instance.Config.RateLimitTime, () => RateLimited.Remove(ev.Player));
 
-                switch (Plugin.GhostSettings[ev.Player.GetUserId()].specmode)
+                switch (Plugin.GhostSettings[ev.Player.UserId].Specmode)
                 {
-                    case GhostSettings.Specmode.Normal:
-	                    Plugin.GhostSettings[ev.Player.GetUserId()].specmode = GhostSettings.Specmode.Ghost;
+                    case GhostSettings.Specmodes.Normal:
+	                    Plugin.GhostSettings[ev.Player.UserId].Specmode = GhostSettings.Specmodes.Ghost;
 
-	                    if (Plugin.GhostSettings.ContainsKey(ev.Player.GetUserId()) && Plugin.GhostSettings[ev.Player.GetUserId()].specmode == GhostSettings.Specmode.Ghost && ev.Player.GetRole() == RoleType.Spectator)
+	                    if (Plugin.GhostSettings.ContainsKey(ev.Player.UserId) && Plugin.GhostSettings[ev.Player.UserId].Specmode == GhostSettings.Specmodes.Ghost && ev.Player.Role == RoleType.Spectator)
 	                    {
-		                    Plugin.Log.Debug($"{ev.Player.GetNickname()} added to list of ghost spectators.");
-		                    Plugin.GhostList.Add(ev.Player);
+		                    Plugin.Log.Debug($"{ev.Player.Nickname} added to list of ghost spectators.");
+		                    GhostList.Add(ev.Player);
 		                    Timing.RunCoroutine(SpawnGhost(ev.Player, 0.1f));
                         }
 
-                        ev.ReturnMessage = Translation.GetText().specmodeGhost;
+                        ev.ReturnMessage = Translation.Translation.GetText().SpecmodeGhost;
 	                    ev.Color = "blue";
+	                    ev.IsAllowed = false;
                         break;
-                    case GhostSettings.Specmode.Ghost:
-	                    Plugin.GhostSettings[ev.Player.GetUserId()].specmode = GhostSettings.Specmode.Normal;
+                    case GhostSettings.Specmodes.Ghost:
+	                    Plugin.GhostSettings[ev.Player.UserId].Specmode = GhostSettings.Specmodes.Normal;
 
-	                    if (Plugin.GhostList.Contains(ev.Player))
+	                    if (GhostList.Contains(ev.Player))
 	                    {
-		                    Plugin.Log.Debug($"{ev.Player.GetNickname()} removed from list of ghost spectators.");
-		                    Plugin.GhostList.Remove(ev.Player);
+		                    Plugin.Log.Debug($"{ev.Player.Nickname} removed from list of ghost spectators.");
+		                    GhostList.Remove(ev.Player);
 		                    ev.Player.SetGhostMode(false);
 		                    ev.Player.ClearInventory();
-                            ev.Player.characterClassManager.SetClassID(RoleType.Spectator);
+		                    ev.Player.Role = RoleType.Spectator;
                         }
 
-                        ev.ReturnMessage = Translation.GetText().specmodeNormal;
+                        ev.ReturnMessage = Translation.Translation.GetText().SpecmodeNormal;
 	                    ev.Color = "blue";
-                        break;
+	                    ev.IsAllowed = false;
+						break;
                     default:
-	                    Plugin.GhostSettings[ev.Player.GetUserId()].specmode = GhostSettings.Specmode.Normal;
+	                    Plugin.GhostSettings[ev.Player.UserId].Specmode = GhostSettings.Specmodes.Normal;
 
-	                    if (Plugin.GhostList.Contains(ev.Player))
+	                    if (GhostList.Contains(ev.Player))
 	                    {
-		                    Plugin.Log.Debug($"{ev.Player.GetNickname()} removed from list of ghost spectators.");
-		                    Plugin.GhostList.Remove(ev.Player);
+		                    Plugin.Log.Debug($"{ev.Player.Nickname} removed from list of ghost spectators.");
+		                    GhostList.Remove(ev.Player);
 		                    ev.Player.SetGhostMode(false);
                             ev.Player.ClearInventory();
-		                    ev.Player.characterClassManager.SetClassID(RoleType.Spectator);
-                        }
+                            ev.Player.Role = RoleType.Spectator;
+						}
 
-                        ev.ReturnMessage = Translation.GetText().specmodeNormal;
+                        ev.ReturnMessage = Translation.Translation.GetText().SpecmodeNormal;
 	                    ev.Color = "blue";
-                        break;
+	                    ev.IsAllowed = false;
+						break;
                 }
             }
-            else if (ev.Command.ToLower() == "specboard")
+            else if (ev.Name.ToLower() == "specboard")
 	        {
-		        if (!Plugin.GhostSettings.ContainsKey(ev.Player.GetUserId())) Plugin.GhostSettings.Add(ev.Player.GetUserId(), new GhostSettings());
+		        if (!Plugin.GhostSettings.ContainsKey(ev.Player.UserId)) Plugin.GhostSettings.Add(ev.Player.UserId, new GhostSettings());
 
-                Plugin.GhostSettings[ev.Player.GetUserId()].specboard =
-			        !Plugin.GhostSettings[ev.Player.GetUserId()].specboard;
+                Plugin.GhostSettings[ev.Player.UserId].Specboard =
+			        !Plugin.GhostSettings[ev.Player.UserId].Specboard;
 
-                ev.ReturnMessage = "You have " + (Plugin.GhostSettings[ev.Player.GetUserId()].specboard ? "enabled" : "disabled") + " specboard mode.";
+                ev.ReturnMessage = "You have " + (Plugin.GhostSettings[ev.Player.UserId].Specboard ? "enabled" : "disabled") + " specboard mode.";
                 ev.Color = "Magenta";
-            }
+                ev.IsAllowed = false;
+			}
         }
 
-        public IEnumerator<float> SpawnGhost(ReferenceHub rh, float delay = 5)
-        {
-            yield return Timing.WaitForSeconds(delay);
-            if (rh.GetRole() == Plugin.GhostRole || rh.GetRole() != RoleType.Spectator) yield break;
-            rh.PlayGhostMessage();
-            rh.SpawnGhost();
-            yield return Timing.WaitForSeconds(1f);
-
-            Plugin.Log.Debug($"{rh.GetNickname()} given the ghost spectator items.");
-            rh.ClearInventory();
-            rh.AddItem(ItemType.Ammo762);
-            rh.AddItem(ItemType.Ammo556);
-            rh.AddItem(ItemType.Ammo9mm);
-            rh.AddItem(ItemType.Flashlight);
+		public void OnInteractingDoor(InteractingDoorEventArgs ev)
+		{
+			switch (ev.Door.name)
+			{
+				case "096":
+					// Do stuff when the 096 door is opened...
+					break;
+				case "173":
+					// Do stuff when the 173 door is opened...
+					break;
+				case "106_PRIMARY":
+				case "106_SECONDARY":
+					// Do stuff when the 106 door is opened...
+					break;
+			}
 		}
-    }
+
+        public IEnumerator<float> SpawnGhost(Exiled.API.Features.Player ply, float delay = 5)
+        {
+	        yield return Timing.WaitForSeconds(delay);
+	        if (ply.Role == Plugin.GhostRole || ply.Role != RoleType.Spectator) yield break;
+	        ply.PlayGhostMessage();
+	        ply.SpawnGhost();
+	        yield return Timing.WaitForSeconds(1f);
+
+	        Plugin.Log.Debug($"{ply.Nickname} given the ghost spectator items.");
+	        ply.ClearInventory();
+	        ply.AddItem(ItemType.Ammo762);
+	        ply.AddItem(ItemType.Ammo556);
+	        ply.AddItem(ItemType.Ammo9mm);
+	        ply.AddItem(ItemType.Flashlight);
+        }
+	}
 }

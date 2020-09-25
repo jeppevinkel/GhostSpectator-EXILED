@@ -1,44 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EXILED.Extensions;
-using GhostSpectator.Localization;
-using Harmony;
-using UnityEngine;
+﻿using Exiled.API.Features;
+using HarmonyLib;
 
 namespace GhostSpectator.Patches
 {
     [HarmonyPatch(typeof(PlayerInteract))]
     [HarmonyPatch(nameof(PlayerInteract.CallCmdUsePanel))]
-    [HarmonyPatch(new Type[]
+    [HarmonyPatch(new[]
     {
-        typeof(string)
+        typeof(PlayerInteract.AlphaPanelOperations)
     })]
     class UsePanelPatch
     {
         [HarmonyPriority(Priority.First)]
-        public static bool Prefix(PlayerInteract __instance, string n)
+        public static bool Prefix(PlayerInteract __instance, PlayerInteract.AlphaPanelOperations n)
         {
             Plugin.Log.Debug("UsePanelPatch");
-            if (!Plugin.GhostList.Contains(__instance.GetComponent<ReferenceHub>())) return true;
-            ReferenceHub rh = __instance.GetComponent<ReferenceHub>();
+            Player ply = Player.Get(__instance.gameObject);
+            if (!Plugin.GhostList.Contains(ply)) return true;
 
-            if (n.Contains("cancel"))
+            if (n == PlayerInteract.AlphaPanelOperations.Cancel)
             {
-                rh.ClearBroadcasts();
-                rh.Broadcast(3, Translation.GetText().detonationCancelDenied);
+	            ply.ClearBroadcasts();
+                ply.Broadcast(3, Translation.Translation.GetText().DetonationCancelDenied);
             }
-            else if (n.Contains("lever"))
+            else if (n == PlayerInteract.AlphaPanelOperations.Lever)
             {
-                rh.ClearBroadcasts();
-                rh.Broadcast(3, Translation.GetText().detonationCancelDenied);
+	            ply.ClearBroadcasts();
+                ply.Broadcast(3, Translation.Translation.GetText().DetonationCancelDenied);
             }
             else
             {
-                rh.ClearBroadcasts();
-                rh.Broadcast(3, Translation.GetText().leverDenied);
+	            ply.ClearBroadcasts();
+                ply.Broadcast(3, Translation.Translation.GetText().LeverDenied);
             }
 
             return false;
